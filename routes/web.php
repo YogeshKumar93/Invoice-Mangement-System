@@ -13,7 +13,9 @@ foreach (glob($modulesPath . '/*', GLOB_ONLYDIR) as $modulePath) {
         foreach (glob($routesPath . '/*.php') as $routeFile) {
 
             Route::middleware(['web'])
-                ->group($routeFile);
+                ->group(function () use ($routeFile) {
+                    require $routeFile;
+                });
         }
     }
 }

@@ -10,6 +10,12 @@ export const menuItems = [
         // roles: ["admin", "staff"],
     },
 
+     {
+        title: "Users",
+        url: "/users",
+        icon: HomeRepairServiceOutlined,
+        // roles: ["admin", "staff"],
+    },
     {
         title: "Invoices",
         url: "/invoices",

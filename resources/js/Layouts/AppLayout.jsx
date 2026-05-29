@@ -3,8 +3,12 @@
 import Sidebar from "@/Components/Layout/Sidebar";
 import Header from "@/Components/Layout/Header";
 import Footer from "@/Components/Layout/Footer";
+import { useState } from "react";
 
 export default function AppLayout({ children }) {
+const [open, setOpen] = useState(false);
+
+
     return (
         <div className="flex h-screen bg-gray-100 overflow-hidden">
 
@@ -15,7 +19,7 @@ export default function AppLayout({ children }) {
             <div className="flex flex-col flex-1 overflow-hidden">
 
                 {/* Header */}
-                <Header />
+               <Header setOpen={setOpen} />
 
                 {/* Main Content */}
                 <main className="flex-1 overflow-y-auto p-6">
