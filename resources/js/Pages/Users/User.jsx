@@ -1,7 +1,9 @@
+import { usePage } from "@inertiajs/react";
 import PaginateTable from "@/Components/Common/PaginateTable";
 
-
 export default function UsersPage() {
+
+    const { users } = usePage().props;
 
     const columns = [
         { key: "name", label: "Name" },
@@ -17,18 +19,12 @@ export default function UsersPage() {
         },
     ];
 
-    const users = [
-        { name: "John", email: "john@test.com", status: 1 },
-        { name: "Alex", email: "alex@test.com", status: 0 },
-    ];
-
     return (
         <PaginateTable
             title="Users"
             data={users}
             columns={columns}
             searchKeys={["name", "email"]}
-            onAdd={() => console.log("Open Add User Modal")}
             filters={[
                 {
                     key: "status",

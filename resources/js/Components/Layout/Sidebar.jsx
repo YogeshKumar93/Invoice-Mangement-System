@@ -1,5 +1,5 @@
 import NavItem from "./NavItem";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import logo from "@/Images/invoce logo.png";
 import smallLogo from "@/Images/invoce logo.png";
@@ -8,30 +8,50 @@ import { menuItems } from "@/Config/menu";
 
 export default function Sidebar({ open, setOpen }) {
     const [isHovering, setIsHovering] = useState(false);
+    const [isDesktop, setIsDesktop] = useState(true);
 
-    // Desktop width
-    const expanded = isHovering;
+    useEffect(() => {
+        const checkDesktop = () => {
+            // Force desktop mode if width > 768px (inspect mode)
+            // Ya phir hamesha desktop mode rakho for better UX
+            setIsDesktop(window.innerWidth >= 768);
+        };
+        
+        checkDesktop();
+        window.addEventListener('resize', checkDesktop);
+        
+        return () => window.removeEventListener('resize', checkDesktop);
+    }, []);
+
+    // Agar inspect mode mein hai (width kam hai but user ne manually inspect khola hai)
+    // Toh bhi sidebar dikhana hai
+    const shouldShowSidebar = isDesktop || open;
+    const expanded = isDesktop && isHovering;
 
     return (
         <>
             {/* MOBILE OVERLAY */}
-            {open && (
+            {open && !isDesktop && (
                 <div
-                    className="fixed inset-0 bg-black/40 z-40 lg:hidden"
+                    className="fixed inset-0 bg-black/40 z-40"
                     onClick={() => setOpen(false)}
                 />
             )}
 
             <aside
-                onMouseEnter={() => setIsHovering(true)}
-                onMouseLeave={() => setIsHovering(false)}
+                onMouseEnter={() => isDesktop && setIsHovering(true)}
+                onMouseLeave={() => isDesktop && setIsHovering(false)}
+                style={{
+                    // Force inline style for inspect mode
+                    transform: shouldShowSidebar ? 'translateX(0)' : 'translateX(-100%)',
+                    position: isDesktop ? 'relative' : 'fixed',
+                    width: expanded ? '192px' : '80px',
+                }}
                 className={`
-                    fixed lg:static z-50 top-0 left-0 h-screen
+                    top-0 left-0 h-screen
                     bg-white border-r border-gray-200 shadow-lg
                     transition-all duration-300 ease-in-out
-                    ${open ? "translate-x-0" : "-translate-x-full"}
-                    full lg:translate-x-0
-                    ${expanded ? "w-48" : "w-20"}
+                    ${!isDesktop ? 'z-50' : ''}
                 `}
             >
                 {/* LOGO */}
@@ -47,8 +67,6 @@ export default function Sidebar({ open, setOpen }) {
                             src={logo}
                             alt="Logo"
                             className="h-9 w-40 object-contain"
-                            
-                            
                         />
                     ) : (
                         <img

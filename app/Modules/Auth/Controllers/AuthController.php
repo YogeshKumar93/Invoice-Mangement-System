@@ -2,7 +2,8 @@
 
 namespace App\Modules\Auth\Controllers;
 
-use App\Models\User;
+// use App\Models\User;
+use App\Modules\User\Models\UserModel;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -36,7 +37,7 @@ class AuthController extends Controller
         }
 
         // Check if user exists
-        $user = User::where('username', $request->username)->first();
+        $user = UserModel::where('username', $request->username)->first();
 
         if (!$user) {
             return back()->withErrors(['username' => 'User not found']);

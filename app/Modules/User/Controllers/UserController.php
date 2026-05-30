@@ -1,25 +1,24 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Modules\User\Controllers;
 
-use App\Models\User;
+use App\Http\Controllers\Controller;
+use App\Modules\User\Models\UserModel;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 use Illuminate\Support\Facades\Hash;
+use Inertia\Inertia;
 
 class UserController extends Controller
 {
-    // 📄 List Page
     public function index()
     {
-        $users = User::latest()->get();
+        $users = UserModel::latest()->get();
 
         return Inertia::render('Users/User', [
             'users' => $users
         ]);
     }
 
-    // ➕ Store User
     public function store(Request $request)
     {
         $request->validate([
@@ -28,40 +27,33 @@ class UserController extends Controller
             'password' => 'required|min:6',
         ]);
 
-        User::create([
+        UserModel::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'status' => 1,
         ]);
 
-        return redirect()->back()->with('success', 'User created successfully');
+        return back();
     }
 
-    // ✏️ Update User
     public function update(Request $request, $id)
     {
-        $user = User::findOrFail($id);
-
-        $request->validate([
-            'name' => 'required',
-            'email' => 'required|email|unique:users,email,' . $id,
-        ]);
+        $user = UserModel::findOrFail($id);
 
         $user->update([
             'name' => $request->name,
             'email' => $request->email,
-            'status' => $request->status ?? $user->status,
+            'status' => $request->status,
         ]);
 
-        return redirect()->back()->with('success', 'User updated successfully');
+        return back();
     }
 
-    // ❌ Delete User
     public function destroy($id)
     {
-        User::findOrFail($id)->delete();
+        UserModel::findOrFail($id)->delete();
 
-        return redirect()->back()->with('success', 'User deleted successfully');
+        return back();
     }
 }

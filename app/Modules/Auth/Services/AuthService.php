@@ -20,7 +20,7 @@ class AuthService
     public function getUserFromUsername(string $username): ?User
     {
         // Extract numeric ID from username (remove GURU and role prefix)
-        preg_match('/GURU([A-Z]*)(\d+)/', $username, $matches);
+        preg_match('/IMS([A-Z]*)(\d+)/', $username, $matches);
         
         if (isset($matches[2])) {
             $userId = (int) $matches[2];
