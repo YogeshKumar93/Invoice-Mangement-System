@@ -17,8 +17,8 @@ export const menuItems = [
         // roles: ["admin", "staff"],
     },
     {
-        title: "Invoices",
-        url: "/invoices",
+        title: "Products",
+        url: "/products",
         icon: HomeRepairServiceOutlined,
         // roles: ["admin", "staff"],
     },
