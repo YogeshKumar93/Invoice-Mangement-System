@@ -118,7 +118,21 @@ export default function Product({ products }) {
             "price",
             "gst"
         ]}
-         onAdd={() => setOpenModal(true)}
+         onAdd={() => {
+    setEditMode(false);
+    setEditId(null);
+
+    setFormData({
+        name: "",
+        sku: "",
+        price: "",
+        gst: "",
+        status: true,
+    });
+
+    setErrors({});
+    setOpenModal(true);
+}}
         addButtonText="Add Product"
         />
 
