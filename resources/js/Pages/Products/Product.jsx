@@ -31,9 +31,15 @@ export default function Product({ products }) {
             key: "action",
             label: "Action",
             render: (row) => (
+                <>
                 <button onClick={() => handleEditClick(row)}>
                     Edit
                 </button>
+
+                <button onClick={() => handleDelete(row)}>
+                    Delete
+                </button>
+                </>
             ),
         },
     ];
@@ -97,6 +103,16 @@ export default function Product({ products }) {
             setOpenModal(false);
         }
     };
+
+    const handleDelete = async (row) => {
+        if (!confirm("Delete this product?")) return;
+
+        await apiCall({
+            url: `/products/${row.id}`,
+            method: "DELETE",
+            reload: true,
+        });
+    }
 
     const formFields = [
         { name: "name", label: "Product Name", required: true },
