@@ -26,6 +26,7 @@
         "@emotion/styled": "^11.14.1",
         "@heroicons/react": "^2.2.0",
         "@mui/icons-material": "^5.18.0",
-        "@mui/material": "^5.18.0"
+        "@mui/material": "^5.18.0",
+        "lucide-react": "^1.17.0"
     }
 }

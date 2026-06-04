@@ -1,3 +1,4 @@
+import { router } from "@inertiajs/react";
 import axios from "axios";
 
 let toastHandler = null;
@@ -19,6 +20,8 @@ export const setHideHandler = (fn) => {
 
 // MAIN API
 export const apiCall = async (config) => {
+     const { reload, ...axiosConfig } = config;
+
     try {
         // ✅ show loader
         loadingHandler && loadingHandler("Please wait...");
@@ -32,6 +35,11 @@ export const apiCall = async (config) => {
         // if (res?.data?.message) {
         //     toastHandler && toastHandler(res.data.message, "success");
         // }
+
+         // 🔥 AUTO RELOAD LOGIC
+        if (reload) {
+            router.reload();
+        }
 
         return res.data;
     } catch (err) {
