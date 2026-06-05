@@ -11,15 +11,22 @@ class UserModel extends Authenticatable
 
     protected $table = 'users';
 
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-        'status',
-    ];
+   protected $fillable = [
+    'name',
+    'email',
+    'username',
+    'phone',
+    'password',
+    // 'role',
+    // 'status',
+];
 
     protected $hidden = [
         'password',
         'remember_token',
     ];
+
+    //  protected $casts = [
+    //     'status' => 'boolean',
+    // ];
 }

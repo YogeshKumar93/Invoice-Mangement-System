@@ -35,6 +35,12 @@ return new class extends Migration
             $table->longText('payload');
             $table->integer('last_activity')->index();
         });
+
+        Schema::table('users', function (Blueprint $table) {
+    $table->string('phone')->nullable();
+    $table->boolean('status')->default(1);
+    $table->string('role')->default('user');
+});
     }
 
     /**
