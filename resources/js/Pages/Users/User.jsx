@@ -98,8 +98,8 @@ export default function UsersPage() {
 
         try {
             await apiCall({
-                url: `/users/${editId}`,
-                method: "PUT",
+                url: `/auth/users/${editId}`,
+                method: "POST",
                 data: formData,
                 reload: true,
             });
@@ -115,7 +115,7 @@ export default function UsersPage() {
         if (!confirm("Delete this user?")) return;
 
         await apiCall({
-            url: `/users/${row.id}`,
+            url: `/auth/users/${row.id}`,
             method: "DELETE",
             reload: true,
         });

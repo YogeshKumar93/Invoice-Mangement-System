@@ -24,7 +24,7 @@ class UserController extends Controller
         $request->validate([
              'name' => 'required|string|max:255',
     'email' => 'required|email|unique:users,email',
-    'username' => 'nullable|string|max:255',
+   
     'password' => 'required|min:6',
     'phone' => 'nullable|string|max:20',
     // 'role' => 'nullable|string',
@@ -33,7 +33,7 @@ class UserController extends Controller
        UserModel::create([
     'name' => $request->name,
     'email' => $request->email,
-    'username' => $request->username ?? $request->email, // fallback safe
+   
     'phone' => $request->phone,
     // 'role' => $request->role ?? 'user',
     // 'status' => 1,
@@ -51,7 +51,7 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $id,
             'phone' => 'nullable|string|max:20',
-              'username' => 'nullable|string|max:255',
+              
             // 'role' => 'nullable|string',
             // 'status' => 'boolean',
         ]);
@@ -59,7 +59,7 @@ class UserController extends Controller
         $data = [
             'name' => $request->name,
     'email' => $request->email,
-    'username' => $request->username,
+   
     'phone' => $request->phone,
     // 'role' => $request->role,
     // 'status' => $request->status ?? 1,
@@ -79,11 +79,14 @@ class UserController extends Controller
         return back();
     }
 
-    public function destroy($id)
+    public function destroy(UserModel $user)
     {
-        $user = UserModel::findOrFail($id);
+       
         $user->delete();
 
-        return back();
+         return response()->json([
+            'success' => true,
+            'message' => 'User deleted successfully'
+        ]);
     }
 }

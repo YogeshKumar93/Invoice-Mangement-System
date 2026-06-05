@@ -11,7 +11,7 @@ Route::prefix('auth')->group(function () {
     Route::post('/users', [UserController::class, 'store'])
         ->name('users.store');
 
-    Route::put('/users/{id}', [UserController::class, 'update'])
+    Route::post('/users/{id}', [UserController::class, 'update'])
         ->name('users.update');
 
     Route::delete('/users/{id}', [UserController::class, 'destroy'])
