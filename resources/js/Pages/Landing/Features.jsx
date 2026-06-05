@@ -1,79 +1,90 @@
 // components/sections/Features.jsx
 import React from 'react';
 import { 
-  Package, ShoppingCart, DollarSign, Users, Truck, 
-  TrendingUp, BarChart3, ShieldCheck, Zap, Clock,
-  Database, Lock, Bell, FileText, ClipboardList, RefreshCw
+  Package, ShoppingCart, DollarSign, Users, Truck, TrendingUp, BarChart3, 
+  Zap, Bell, ClipboardList, RefreshCw, Database, Lock, Clock, 
+  FileText, Sparkles, Globe, Headphones, Palette, Gem
 } from 'lucide-react';
 
-const FeatureCard = ({ icon: Icon, title, description, color }) => {
-  const colors = {
-    blue: 'bg-blue-50 text-blue-600',
-    green: 'bg-green-50 text-green-600',
-    purple: 'bg-purple-50 text-purple-600',
-    orange: 'bg-orange-50 text-orange-600',
-    red: 'bg-red-50 text-red-600',
-    indigo: 'bg-indigo-50 text-indigo-600',
+const FeatureCard = ({ icon: Icon, title, description, color, bgGradient }) => {
+  const colorMap = {
+    purple: 'text-purple-600',
+    pink: 'text-pink-600',
+    orange: 'text-orange-600',
+    yellow: 'text-yellow-600',
+    green: 'text-green-600',
+    blue: 'text-blue-600',
+    indigo: 'text-indigo-600',
+    red: 'text-red-600',
+    teal: 'text-teal-600',
   };
 
   return (
-    <div className="group bg-white rounded-2xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-blue-100 hover:-translate-y-1">
-      <div className={`w-12 h-12 ${colors[color]} rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition`}>
-        <Icon className="h-6 w-6" />
+    <div className={`group bg-gradient-to-br ${bgGradient} rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border border-white/30 backdrop-blur-sm`}>
+      <div className={`w-14 h-14 bg-white/80 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-all duration-300 shadow-md`}>
+        <Icon className={`h-7 w-7 ${colorMap[color]}`} />
       </div>
-      <h3 className="text-lg font-semibold text-gray-900 mb-2">{title}</h3>
-      <p className="text-gray-500 text-sm leading-relaxed">{description}</p>
+      <h3 className="text-xl font-bold text-gray-900 mb-2">{title}</h3>
+      <p className="text-gray-600 text-sm leading-relaxed">{description}</p>
     </div>
   );
 };
 
 const Features = () => {
   const features = [
-    { icon: Package, title: "Inventory Tracking", description: "Real-time stock levels with automated reorder alerts and batch tracking across multiple warehouses.", color: "blue" },
-    { icon: ShoppingCart, title: "Purchase Management", description: "Streamline procurement with purchase orders, vendor management, and automated PO generation.", color: "green" },
-    { icon: DollarSign, title: "Sales Management", description: "Track orders, generate invoices, and manage revenue across multiple sales channels.", color: "purple" },
-    { icon: Users, title: "Customer Management", description: "Centralized customer profiles with purchase history, preferences, and analytics.", color: "orange" },
-    { icon: Truck, title: "Supplier Management", description: "Manage supplier relationships, contracts, performance metrics, and communication.", color: "indigo" },
-    { icon: TrendingUp, title: "Expense Tracking", description: "Monitor operational costs, track expenses, and optimize spending patterns.", color: "red" },
-    { icon: BarChart3, title: "Reports & Analytics", description: "Customizable dashboards with actionable business insights and forecasting.", color: "blue" },
-    { icon: ShieldCheck, title: "User Role Management", description: "Granular access controls for team members with custom permission levels.", color: "green" },
-    { icon: Zap, title: "Automation Rules", description: "Set automated workflows for reordering, notifications, and stock updates.", color: "purple" },
-    { icon: Bell, title: "Smart Alerts", description: "Real-time notifications for low stock, expiring items, and unusual activity.", color: "orange" },
-    { icon: ClipboardList, title: "Order Management", description: "End-to-end order tracking from placement to delivery with status updates.", color: "indigo" },
-    { icon: RefreshCw, title: "Stock Transfers", description: "Seamlessly transfer stock between locations and track movement history.", color: "red" },
-    { icon: Database, title: "Data Backup", description: "Automated cloud backups with 30-day history and easy restoration.", color: "blue" },
-    { icon: Lock, title: "Security", description: "Enterprise-grade encryption with two-factor authentication and audit logs.", color: "green" },
-    { icon: Clock, title: "Real-time Sync", description: "Instant synchronization across all devices and platforms.", color: "purple" },
-    { icon: FileText, title: "Barcode Scanning", description: "Integrated barcode generation and scanning for quick inventory updates.", color: "orange" },
+    { icon: Package, title: "Smart Inventory", description: "Real-time tracking with AI-powered reorder alerts and batch management.", color: "purple", bgGradient: "from-purple-50 to-purple-100/50" },
+    { icon: ShoppingCart, title: "Purchase Orders", description: "Automated PO generation with vendor management and approval flows.", color: "pink", bgGradient: "from-pink-50 to-pink-100/50" },
+    { icon: DollarSign, title: "Sales Analytics", description: "Track revenue, bestsellers, and profit margins across channels.", color: "orange", bgGradient: "from-orange-50 to-orange-100/50" },
+    { icon: Users, title: "Customer 360°", description: "Purchase history, preferences, and smart segmentation tools.", color: "yellow", bgGradient: "from-yellow-50 to-yellow-100/50" },
+    { icon: Truck, title: "Supplier Hub", description: "Contract management, performance metrics, and automated ordering.", color: "green", bgGradient: "from-green-50 to-green-100/50" },
+    { icon: TrendingUp, title: "Expense Tracking", description: "Monitor costs, optimize spending, and boost profitability.", color: "blue", bgGradient: "from-blue-50 to-blue-100/50" },
+    { icon: BarChart3, title: "Predictive Reports", description: "ML-powered forecasts and actionable business insights.", color: "indigo", bgGradient: "from-indigo-50 to-indigo-100/50" },
+    { icon: Lock, title: "Role Security", description: "Granular access controls with 2FA and audit logs.", color: "red", bgGradient: "from-red-50 to-red-100/50" },
+    { icon: Zap, title: "Automation Rules", description: "Set workflows for reordering, alerts, and stock updates.", color: "purple", bgGradient: "from-purple-50 to-purple-100/50" },
+    { icon: Bell, title: "Smart Alerts", description: "Real-time notifications for low stock and unusual activity.", color: "pink", bgGradient: "from-pink-50 to-pink-100/50" },
+    { icon: ClipboardList, title: "Order Tracking", description: "End-to-end visibility from placement to delivery.", color: "orange", bgGradient: "from-orange-50 to-orange-100/50" },
+    { icon: RefreshCw, title: "Stock Transfers", description: "Seamless multi-location transfers with history.", color: "teal", bgGradient: "from-teal-50 to-teal-100/50" },
+    { icon: Database, title: "Cloud Backup", description: "Automated backups with 90-day restore history.", color: "blue", bgGradient: "from-blue-50 to-blue-100/50" },
+    { icon: Globe, title: "Multi-warehouse", description: "Manage unlimited locations from one dashboard.", color: "green", bgGradient: "from-green-50 to-green-100/50" },
+    { icon: FileText, title: "Barcode Scanner", description: "Generate & scan barcodes for instant updates.", color: "yellow", bgGradient: "from-yellow-50 to-yellow-100/50" },
+    { icon: Headphones, title: "24/7 Support", description: "Priority support with dedicated account manager.", color: "indigo", bgGradient: "from-indigo-50 to-indigo-100/50" },
   ];
 
   return (
-    <section id="features" className="py-20 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 bg-blue-50 px-4 py-2 rounded-full mb-4">
-            <Zap className="h-4 w-4 text-blue-600" />
-            <span className="text-blue-600 text-sm font-semibold">Powerful Features</span>
+    <section id="features" className="py-24 relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-br from-yellow-50 via-white to-purple-50 -z-10" />
+      <div className="absolute top-40 -left-20 w-80 h-80 bg-gradient-to-r from-pink-300 to-purple-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20" />
+      <div className="absolute bottom-40 -right-20 w-80 h-80 bg-gradient-to-r from-orange-300 to-yellow-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20" />
+      
+      <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 relative z-10">
+        <div className="text-center mb-14">
+          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-200 via-pink-200 to-orange-200 px-6 py-2.5 rounded-full shadow-md mb-5">
+            <Gem className="h-5 w-5 text-purple-700" />
+            <span className="text-purple-800 font-extrabold text-sm uppercase tracking-wide">Colorful Features</span>
           </div>
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
-            Everything You Need to <span className="text-blue-600">Manage Inventory</span>
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-gray-900">
+            Everything you need in{' '}
+            <span className="bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 bg-clip-text text-transparent">
+              vibrant detail
+            </span>
           </h2>
-          <p className="mt-4 text-gray-600 max-w-2xl mx-auto">
-            Powerful features designed to streamline your entire supply chain operation and boost productivity
+          <p className="mt-5 text-gray-700 text-lg max-w-2xl mx-auto font-medium">
+            Packed with powerful tools to streamline your entire supply chain
           </p>
         </div>
 
-        {/* Feature Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
+        {/* Stats Bar */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-14">
           {[
-            { label: "Features", value: "16+", color: "blue" },
-            { label: "Integrations", value: "50+", color: "green" },
-            { label: "API Calls/sec", value: "10K+", color: "purple" },
-            { label: "Happy Users", value: "10K+", color: "orange" },
+            { icon: Palette, value: "16+", label: "Core Features", color: "purple" },
+            { icon: Globe, value: "70+", label: "Integrations", color: "pink" },
+            { icon: Zap, value: "99.99%", label: "Uptime SLA", color: "orange" },
+            { icon: Users, value: "15K+", label: "Active Users", color: "green" },
           ].map((stat, idx) => (
-            <div key={idx} className="bg-gradient-to-br from-gray-50 to-white rounded-xl p-4 text-center border border-gray-100">
-              <p className="text-2xl font-bold text-gray-900">{stat.value}</p>
-              <p className="text-sm text-gray-500">{stat.label}</p>
+            <div key={idx} className="bg-white/70 backdrop-blur-sm rounded-2xl p-5 text-center border-2 border-white shadow-lg hover:shadow-xl transition">
+              <stat.icon className={`h-8 w-8 mx-auto mb-2 text-${stat.color}-600`} />
+              <p className="text-3xl font-black text-gray-800">{stat.value}</p>
+              <p className="text-sm font-bold text-gray-500">{stat.label}</p>
             </div>
           ))}
         </div>
@@ -84,10 +95,9 @@ const Features = () => {
           ))}
         </div>
 
-        {/* CTA within Features */}
-        <div className="mt-12 text-center">
-          <button className="px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition shadow-lg">
-            View All Features
+        <div className="mt-16 text-center">
+          <button className="group px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-2xl font-bold text-lg hover:shadow-2xl transition-all duration-300 flex items-center gap-2 mx-auto">
+            Explore All Features <Sparkles className="h-5 w-5 group-hover:rotate-12 transition" />
           </button>
         </div>
       </div>

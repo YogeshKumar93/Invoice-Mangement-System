@@ -13,13 +13,13 @@ use Illuminate\Support\Str;
 class AuthService
 {
     /**
-     * Get user from username (GURU pattern)
-     * Example: GURU123 -> user id 123
-     * Example: GURUAD123 -> user id 123 with role AD
+     * Get user from username (IMS pattern)
+     * Example: IMS123 -> user id 123
+     * Example: IMSAD123 -> user id 123 with role AD
      */
     public function getUserFromUsername(string $username): ?User
     {
-        // Extract numeric ID from username (remove GURU and role prefix)
+        // Extract numeric ID from username (remove IMS and role prefix)
         preg_match('/IMS([A-Z]*)(\d+)/', $username, $matches);
         
         if (isset($matches[2])) {
@@ -52,12 +52,12 @@ class AuthService
             'api'  => 'AP'
         ];
 
-        if ($user->role == 'guru') {
-            return 'GURU' . $user->id;
+        if ($user->role == 'IMS') {
+            return 'IMS' . $user->id;
         }
 
         $roleShort = $roleMap[$user->role] ?? 'US';
-        return 'GURU' . $roleShort . $user->id;
+        return 'IMS' . $roleShort . $user->id;
     }
 
     /**
