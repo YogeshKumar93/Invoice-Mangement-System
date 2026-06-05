@@ -21,49 +21,68 @@ export default function PaginateTable({
     const filteredData = useMemo(() => {
         let result = [...data];
 
-        // Search
         if (searchable && search) {
             result = result.filter((item) =>
                 searchKeys.some((key) =>
-                    String(item[key])
+                    String(item[key] ?? "")
                         .toLowerCase()
                         .includes(search.toLowerCase())
                 )
             );
         }
 
-        // Filters
         filters.forEach((filter) => {
             const value = filterValues[filter.key];
+
             if (value) {
-                result = result.filter((item) => item[filter.key] === value);
+                result = result.filter(
+                    (item) => item[filter.key] === value
+                );
             }
         });
 
         return result;
     }, [data, search, filterValues]);
 
-    // Pagination
+    // 📄 Pagination
     const totalPages = Math.ceil(filteredData.length / pageSize);
 
     const paginatedData = useMemo(() => {
         if (!pagination) return filteredData;
+
         const start = (page - 1) * pageSize;
         return filteredData.slice(start, start + pageSize);
     }, [filteredData, page]);
 
     return (
-        <div className="bg-white p-4 rounded-xl shadow">
-
+        <div className="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
             {/* HEADER */}
-            <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-semibold">{title}</h2>
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 p-6 border-b border-gray-100">
+                <div>
+                    <h2 className="text-xl font-semibold text-gray-800">
+                        {title}
+                    </h2>
+                    <p className="text-sm text-gray-500 mt-1">
+                        Total Records: {filteredData.length}
+                    </p>
+                </div>
 
-                <div className="flex gap-2">
+                <div className="flex flex-wrap gap-2">
                     {onExport && (
                         <button
                             onClick={() => onExport(filteredData)}
-                            className="px-3 py-1 bg-green-600 text-white rounded"
+                            className="
+                                px-4 py-2
+                                bg-emerald-600
+                                hover:bg-emerald-700
+                                text-white
+                                text-sm
+                                font-medium
+                                rounded-lg
+                                transition-all
+                                duration-200
+                                shadow-sm
+                            "
                         >
                             Export
                         </button>
@@ -72,7 +91,18 @@ export default function PaginateTable({
                     {onAdd && (
                         <button
                             onClick={onAdd}
-                            className="px-3 py-1 bg-blue-600 text-white rounded"
+                            className="
+                                px-4 py-2
+                                bg-blue-600
+                                hover:bg-blue-700
+                                text-white
+                                text-sm
+                                font-medium
+                                rounded-lg
+                                transition-all
+                                duration-200
+                                shadow-sm
+                            "
                         >
                             {addButtonText}
                         </button>
@@ -81,25 +111,43 @@ export default function PaginateTable({
             </div>
 
             {/* SEARCH + FILTERS */}
-            <div className="flex gap-3 mb-4 flex-wrap">
-
+            <div className="p-6 border-b border-gray-100 flex flex-wrap gap-3">
                 {searchable && (
                     <input
                         type="text"
                         placeholder="Search..."
-                        className="border p-2 rounded w-64"
                         value={search}
                         onChange={(e) => {
                             setSearch(e.target.value);
                             setPage(1);
                         }}
+                        className="
+                            w-full md:w-72
+                            px-4 py-2.5
+                            border border-gray-300
+                            rounded-lg
+                            text-sm
+                            focus:outline-none
+                            focus:ring-2
+                            focus:ring-blue-500
+                            focus:border-blue-500
+                        "
                     />
                 )}
 
                 {filters.map((filter) => (
                     <select
                         key={filter.key}
-                        className="border p-2 rounded"
+                        className="
+                            px-4 py-2.5
+                            border border-gray-300
+                            rounded-lg
+                            text-sm
+                            focus:outline-none
+                            focus:ring-2
+                            focus:ring-blue-500
+                            focus:border-blue-500
+                        "
                         onChange={(e) =>
                             setFilterValues({
                                 ...filterValues,
@@ -107,9 +155,15 @@ export default function PaginateTable({
                             })
                         }
                     >
-                        <option value="">{filter.label}</option>
+                        <option value="">
+                            {filter.label}
+                        </option>
+
                         {filter.options.map((opt) => (
-                            <option key={opt.value} value={opt.value}>
+                            <option
+                                key={opt.value}
+                                value={opt.value}
+                            >
                                 {opt.label}
                             </option>
                         ))}
@@ -119,11 +173,23 @@ export default function PaginateTable({
 
             {/* TABLE */}
             <div className="overflow-x-auto">
-                <table className="w-full border">
-                    <thead className="bg-gray-100">
+                <table className="min-w-full">
+                    <thead className="bg-gray-50 sticky top-0 z-10">
                         <tr>
                             {columns.map((col) => (
-                                <th key={col.key} className="p-2 text-left">
+                                <th
+                                    key={col.key}
+                                    className="
+                                        px-6 py-4
+                                        text-left
+                                        text-xs
+                                        font-semibold
+                                        uppercase
+                                        tracking-wider
+                                        text-gray-600
+                                        border-b
+                                    "
+                                >
                                     {col.label}
                                 </th>
                             ))}
@@ -131,43 +197,114 @@ export default function PaginateTable({
                     </thead>
 
                     <tbody>
-                        {paginatedData.map((row, i) => (
-                            <tr key={i} className="border-t">
-                                {columns.map((col) => (
-                                    <td key={col.key} className="p-2">
-                                        {col.render
-                                            ? col.render(row)
-                                            : row[col.key]}
-                                    </td>
-                                ))}
+                        {paginatedData.length > 0 ? (
+                            paginatedData.map((row, i) => (
+                                <tr
+                                    key={i}
+                                    className="
+                                        border-b border-gray-100
+                                        hover:bg-gray-50
+                                        transition-colors
+                                    "
+                                >
+                                    {columns.map((col) => (
+                                        <td
+                                            key={col.key}
+                                            className="
+                                                px-6 py-4
+                                                text-sm
+                                                text-gray-700
+                                            "
+                                        >
+                                            {col.render
+                                                ? col.render(row)
+                                                : row[col.key]}
+                                        </td>
+                                    ))}
+                                </tr>
+                            ))
+                        ) : (
+                            <tr>
+                                <td
+                                    colSpan={columns.length}
+                                    className="
+                                        py-16
+                                        text-center
+                                        text-gray-500
+                                    "
+                                >
+                                    <div className="flex flex-col items-center gap-2">
+                                        <span className="text-4xl">
+                                            📄
+                                        </span>
+                                        <p className="font-medium">
+                                            No records found
+                                        </p>
+                                    </div>
+                                </td>
                             </tr>
-                        ))}
+                        )}
                     </tbody>
                 </table>
             </div>
 
             {/* PAGINATION */}
             {pagination && (
-                <div className="flex justify-end gap-2 mt-4">
-                    <button
-                        disabled={page === 1}
-                        onClick={() => setPage(page - 1)}
-                        className="px-2 py-1 border"
-                    >
-                        Prev
-                    </button>
+                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 p-6 border-t border-gray-100">
+                    <p className="text-sm text-gray-600">
+                        Showing{" "}
+                        <span className="font-medium">
+                            {paginatedData.length}
+                        </span>{" "}
+                        of{" "}
+                        <span className="font-medium">
+                            {filteredData.length}
+                        </span>{" "}
+                        records
+                    </p>
 
-                    <span>
-                        {page} / {totalPages || 1}
-                    </span>
+                    <div className="flex items-center gap-3">
+                        <button
+                            disabled={page === 1}
+                            onClick={() => setPage(page - 1)}
+                            className="
+                                px-4 py-2
+                                border border-gray-300
+                                rounded-lg
+                                text-sm
+                                font-medium
+                                hover:bg-gray-50
+                                disabled:opacity-50
+                                disabled:cursor-not-allowed
+                            "
+                        >
+                            Prev
+                        </button>
 
-                    <button
-                        disabled={page === totalPages}
-                        onClick={() => setPage(page + 1)}
-                        className="px-2 py-1 border"
-                    >
-                        Next
-                    </button>
+                        <span className="text-sm font-medium text-gray-700">
+                            Page {page} of {totalPages || 1}
+                        </span>
+
+                        <button
+                            disabled={
+                                page === totalPages ||
+                                totalPages === 0
+                            }
+                            onClick={() => setPage(page + 1)}
+                            className="
+                                px-4 py-2
+                                border border-gray-300
+                                rounded-lg
+                                text-sm
+                                font-medium
+                                hover:bg-gray-50
+                                disabled:opacity-50
+                                disabled:cursor-not-allowed
+                            "
+                        >
+                            Next
+                        </button>
+                    </div>
                 </div>
             )}
         </div>

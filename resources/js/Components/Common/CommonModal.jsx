@@ -13,16 +13,16 @@ import {
     useMediaQuery,
     Autocomplete,
     FormControlLabel,
+    Divider,
 } from "@mui/material";
-import { X } from "lucide-react";
-import logo from "@/images/invoce logo.png";
+import { X, Save, AlertCircle } from "lucide-react";
 import Checkbox from "../Checkbox";
 
 const CommonFormField = ({
     field,
     formData,
     handleChange,
-    setValue, // ✅ ADD THIS
+    setValue,
     errors,
     loading,
 }) => {
@@ -47,36 +47,44 @@ const CommonFormField = ({
 
     const inputSx = {
         "& .MuiOutlinedInput-root": {
-            bgcolor: "#ffffff", // Pure White Background
-            borderRadius: "12px",
+            bgcolor: "#1e1e1e",
+            borderRadius: "8px",
             transition: "all 0.2s",
             "& fieldset": {
-                border: "1px solid #e2e8f0",
-                boxShadow: "0 1px 2px rgba(0,0,0,0.05)", // Subtle depth like in your image
+                border: "1px solid #3a3a3a",
+                boxShadow: "none",
             },
-            "&:hover fieldset": { borderColor: "#cbd5e1" },
+            "&:hover fieldset": { borderColor: "#5a5a5a" },
             "&.Mui-focused fieldset": {
-                borderWidth: "1.5px",
-                borderColor: "#7c3aed",
+                borderWidth: "1px",
+                borderColor: "#9a9a9a",
             },
         },
         "& .MuiInputBase-input": {
             py: 1.5,
             fontSize: "0.875rem",
-            color: "#1e293b",
-            // --- Placeholder Dark Color Fix ---
+            color: "#e0e0e0",
             "&::placeholder": {
-                color: "#475569", // Darker for better visibility
+                color: "#7a7a7a",
                 opacity: 0.8,
             },
+        },
+        "& .MuiInputLabel-root": {
+            color: "#9a9a9a",
+            "&.Mui-focused": {
+                color: "#c0c0c0",
+            },
+        },
+        "& .MuiFormHelperText-root": {
+            color: "#f44336",
+            fontSize: "0.7rem",
         },
     };
 
     const commonProps = {
         fullWidth: true,
         name,
-         autoFocus: field.autoFocus || false,
-
+        autoFocus: field.autoFocus || false,
         value: formData[name] ?? "",
         onChange: (e) => {
             const value = e.target.value;
@@ -98,9 +106,9 @@ const CommonFormField = ({
                 <Box
                     sx={{
                         mr: 1.5,
-                        color: "#9A3FEE",
+                        color: "#9a9a9a",
                         display: "flex",
-                        opacity: 0.8,
+                        opacity: 0.7,
                     }}
                 >
                     <StartIcon size={18} />
@@ -109,30 +117,22 @@ const CommonFormField = ({
         },
     };
 
-    // ✅ AUTOCOMPLETE HANDLE
     if (type === "autocomplete") {
         return (
             <Box>
                 <Typography
                     variant="body2"
                     sx={{
-                        mb: 0.2,
-                        fontWeight: 600,
-                        color: "#475569",
-                        fontSize: "0.75rem",
+                        mb: 0.75,
+                        fontWeight: 500,
+                        color: "#b0b0b0",
+                        fontSize: "0.7rem",
                         textTransform: "uppercase",
                         letterSpacing: "0.5px",
-                        opacity: hasValue ? 1 : 0,
-                        transform: hasValue
-                            ? "translateY(0)"
-                            : "translateY(5px)",
-                        transition: "all 0.2s ease",
-                        height: hasValue ? "auto" : "0px",
-                        pointerEvents: "none",
                     }}
                 >
                     {label}{" "}
-                    {required && <span style={{ color: "#ef4444" }}>*</span>}
+                    {required && <span style={{ color: "#f44336" }}>*</span>}
                 </Typography>
 
                 <Autocomplete
@@ -165,9 +165,9 @@ const CommonFormField = ({
                                     <Box
                                         sx={{
                                             mr: 1.5,
-                                            color: "#9A3FEE",
+                                            color: "#9a9a9a",
                                             display: "flex",
-                                            opacity: 0.8,
+                                            opacity: 0.7,
                                         }}
                                     >
                                         <StartIcon size={18} />
@@ -182,74 +182,82 @@ const CommonFormField = ({
         );
     }
 
-    // ✅ SELECT HANDLE
-    // ✅ SELECT HANDLE (FIXED WITH PLACEHOLDER)
-if (type === "select") {
-    return (
-        <TextField
-            select
-            fullWidth
-            name={name}
-            label={
-                <>
-                    {label}
-                    {required && <span style={{ color: "#ef4444" }}> *</span>}
-                </>
-            }
-            value={formData[name] ?? ""}
-            onChange={(e) => {
-                const value = e.target.value;
-                if (handleChange) {
-                    handleChange(e);
-                }
-                if (setValue) {
-                    setValue(name, value);
-                }
-            }}
-            error={!!errorMessage}
-            helperText={errorMessage}
-            disabled={loading}
-            sx={inputSx}
-            SelectProps={{
-                displayEmpty: true,  // This allows showing placeholder when value is empty
-                renderValue: (selected) => {
-                    if (!selected || selected === "") {
-                        return <em style={{ color: '#9ca3af' }}>Select {label}</em>;
-                    }
-                    const option = options.find(opt => opt.value === selected);
-                    return option?.label || selected;
-                }
-            }}
-            InputProps={{
-                startAdornment: StartIcon ? (
-                    <Box
-                        sx={{
-                            mr: 1.5,
-                            color: "#9A3FEE",
-                            display: "flex",
-                            opacity: 0.8,
-                        }}
-                    >
-                        <StartIcon size={18} />
-                    </Box>
-                ) : null,
-            }}
-        >
-            <MenuItem value="" disabled>
-                Select {label}
-            </MenuItem>
-            {options.map((opt) => (
-                <MenuItem
-                    key={opt.value}
-                    value={opt.value}
-                    sx={{ fontSize: "0.875rem" }}
+    if (type === "select") {
+        return (
+            <Box>
+                <Typography
+                    variant="body2"
+                    sx={{
+                        mb: 0.75,
+                        fontWeight: 500,
+                        color: "#b0b0b0",
+                        fontSize: "0.7rem",
+                        textTransform: "uppercase",
+                        letterSpacing: "0.5px",
+                    }}
                 >
-                    {opt.label}
-                </MenuItem>
-            ))}
-        </TextField>
-    );
-}
+                    {label}{" "}
+                    {required && <span style={{ color: "#f44336" }}>*</span>}
+                </Typography>
+                <TextField
+                    select
+                    fullWidth
+                    name={name}
+                    value={formData[name] ?? ""}
+                    onChange={(e) => {
+                        const value = e.target.value;
+                        if (handleChange) {
+                            handleChange(e);
+                        }
+                        if (setValue) {
+                            setValue(name, value);
+                        }
+                    }}
+                    error={!!errorMessage}
+                    helperText={errorMessage}
+                    disabled={loading}
+                    sx={inputSx}
+                    SelectProps={{
+                        displayEmpty: true,
+                        renderValue: (selected) => {
+                            if (!selected || selected === "") {
+                                return <em style={{ color: '#7a7a7a' }}>Select {label}</em>;
+                            }
+                            const option = options.find(opt => opt.value === selected);
+                            return option?.label || selected;
+                        }
+                    }}
+                    InputProps={{
+                        startAdornment: StartIcon ? (
+                            <Box
+                                sx={{
+                                    mr: 1.5,
+                                    color: "#9a9a9a",
+                                    display: "flex",
+                                    opacity: 0.7,
+                                }}
+                            >
+                                <StartIcon size={18} />
+                            </Box>
+                        ) : null,
+                    }}
+                >
+                    <MenuItem value="" disabled>
+                        Select {label}
+                    </MenuItem>
+                    {options.map((opt) => (
+                        <MenuItem
+                            key={opt.value}
+                            value={opt.value}
+                            sx={{ fontSize: "0.875rem" }}
+                        >
+                            {opt.label}
+                        </MenuItem>
+                    ))}
+                </TextField>
+            </Box>
+        );
+    }
 
     if (field.type === "file") {
         return (
@@ -284,27 +292,21 @@ if (type === "select") {
         );
     }
 
-    // ✅ DEFAULT INPUT HANDLE
     return (
         <Box>
             <Typography
                 variant="body2"
                 sx={{
-                    mb: 0.2,
-                    fontWeight: 600,
-                    color: "#475569",
-                    fontSize: "0.75rem",
+                    mb: 0.75,
+                    fontWeight: 500,
+                    color: "#b0b0b0",
+                    fontSize: "0.7rem",
                     textTransform: "uppercase",
                     letterSpacing: "0.5px",
-                    opacity: hasValue ? 1 : 0,
-                    transform: hasValue ? "translateY(0)" : "translateY(5px)",
-                    transition: "all 0.2s ease",
-                    height: hasValue ? "auto" : "0px",
-                    pointerEvents: "none",
                 }}
             >
                 {label}{" "}
-                {required && <span style={{ color: "#ef4444" }}>*</span>}
+                {required && <span style={{ color: "#f44336" }}>*</span>}
             </Typography>
             <TextField {...commonProps} type={type || "text"} />
         </Box>
@@ -338,76 +340,105 @@ const CommonModal = ({
             fullWidth
             PaperProps={{
                 sx: {
-                    borderRadius: "24px",
+                    borderRadius: "12px",
                     overflow: "hidden",
-                    bgcolor: "#fcfcfd", // Light grey background for the modal to make white inputs pop
+                    bgcolor: "#1a1a1a",
+                    boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.5)",
                 },
             }}
         >
+            {/* Header Section - New Design */}
             <Box
                 sx={{
-                    pt: 2,
-                    pb: 1.5,
-                    textAlign: "center",
-                    position: "relative",
+                    pt: 3,
+                    pb: 2,
+                    px: 3,
+                    bgcolor: "#121212",
+                    borderBottom: "1px solid #2a2a2a",
                 }}
             >
-                <IconButton
-                    onClick={onClose}
-                    sx={{
-                        position: "absolute",
-                        right: 20,
-                        top: 20,
-                        color: "#94a3b8",
-                    }}
-                >
-                    <X size={28} />
-                </IconButton>
-
                 <Box
                     sx={{
                         display: "flex",
-                        flexDirection: "column",
                         alignItems: "center",
+                        justifyContent: "space-between",
                     }}
                 >
-                    <img
-                        src={logo}
-                        alt="IMPSGURU"
-                        style={{ height: "42px", marginBottom: "6px" }}
-                    />
-                    <Typography
-                        variant="body1"
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                        <Box
+                            sx={{
+                                width: 40,
+                                height: 40,
+                                bgcolor: "#2a2a2a",
+                                borderRadius: "8px",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                            }}
+                        >
+                            <Save size={20} color="#c0c0c0" />
+                        </Box>
+                        <Box>
+                            <Typography
+                                variant="h6"
+                                sx={{
+                                    color: "#e0e0e0",
+                                    fontWeight: 600,
+                                    fontSize: "1.1rem",
+                                    letterSpacing: "0px",
+                                }}
+                            >
+                                {title || "IMS Form"}
+                            </Typography>
+                            <Typography
+                                variant="caption"
+                                sx={{
+                                    color: "#7a7a7a",
+                                    fontSize: "0.7rem",
+                                }}
+                            >
+                                Fill in the details below
+                            </Typography>
+                        </Box>
+                    </Box>
+                    
+                    <IconButton
+                        onClick={onClose}
                         sx={{
-                            color: "#2c5c8c",
-                            letterSpacing: "1px",
-                            fontWeight: 700,
-                            fontSize: "0.7rem",
+                            color: "#9a9a9a",
+                            "&:hover": {
+                                color: "#e0e0e0",
+                                bgcolor: "#2a2a2a",
+                            },
                         }}
                     >
-                        PROCEED YOUR JOURNEY WITH IMPSGURU
-                    </Typography>
+                        <X size={20} />
+                    </IconButton>
                 </Box>
 
-                <Box sx={{ display: "flex", mt: 2, height: "3.5px", px: 5 }}>
+                {/* Progress Indicator */}
+                <Box sx={{ mt: 2 }}>
                     <Box
                         sx={{
-                            flex: 1,
-                            bgcolor: "#9A3FEE",
-                            borderRadius: "10px 0 0 10px",
+                            height: "3px",
+                            bgcolor: "#2a2a2a",
+                            borderRadius: "2px",
+                            overflow: "hidden",
                         }}
-                    />
-                    <Box
-                        sx={{
-                            flex: 1,
-                            bgcolor: "#f97316",
-                            borderRadius: "0 10px 10px 0",
-                        }}
-                    />
+                    >
+                        <Box
+                            sx={{
+                                width: "60%",
+                                height: "100%",
+                                bgcolor: "#9a9a9a",
+                                borderRadius: "2px",
+                            }}
+                        />
+                    </Box>
                 </Box>
             </Box>
 
-            <DialogContent sx={{ px: 5, py: 2, overflowY: "auto" }}>
+            <DialogContent sx={{ px: 3, py: 3, overflowY: "auto" }}>
                 {children ? (
                     children
                 ) : (
@@ -415,8 +446,8 @@ const CommonModal = ({
                         sx={{
                             display: "grid",
                             gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
-                            columnGap: 3,
-                            rowGap: 1.5,
+                            columnGap: 2.5,
+                            rowGap: 2,
                         }}
                     >
                         {fieldConfig.map((field, index) => (
@@ -447,24 +478,60 @@ const CommonModal = ({
                         ))}
                     </Box>
                 )}
+                
+                {/* Error Summary */}
+                {Object.keys(errors).length > 0 && (
+                    <Box
+                        sx={{
+                            mt: 2,
+                            p: 1.5,
+                            bgcolor: "#2a1a1a",
+                            borderRadius: "8px",
+                            border: "1px solid #4a2a2a",
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 1,
+                        }}
+                    >
+                        <AlertCircle size={16} color="#f44336" />
+                        <Typography
+                            variant="caption"
+                            sx={{ color: "#f44336", fontSize: "0.7rem" }}
+                        >
+                            Please fix the errors before proceeding
+                        </Typography>
+                    </Box>
+                )}
             </DialogContent>
 
             {!hideActions && (
-                <DialogActions sx={{ px: 5, pb: 4, pt: 1, gap: 2 }}>
+                <DialogActions
+                    sx={{
+                        px: 3,
+                        pb: 3,
+                        pt: 2,
+                        gap: 2,
+                        borderTop: "1px solid #2a2a2a",
+                        bgcolor: "#121212",
+                    }}
+                >
                     <Button
                         onClick={onClose}
                         variant="outlined"
+                        disabled={loading}
                         sx={{
-                            borderRadius: "12px",
-                            px: 4,
-                            py: 1,
+                            borderRadius: "6px",
+                            px: 3,
+                            py: 0.75,
                             textTransform: "none",
-                            fontWeight: 700,
-                            borderColor: "#7c3aed",
-                            color: "#7c3aed",
+                            fontWeight: 500,
+                            fontSize: "0.8rem",
+                            borderColor: "#3a3a3a",
+                            color: "#b0b0b0",
                             "&:hover": {
-                                borderColor: "#6d28d9",
-                                bgcolor: "#f5f3ff",
+                                borderColor: "#5a5a5a",
+                                bgcolor: "#2a2a2a",
+                                color: "#e0e0e0",
                             },
                         }}
                     >
@@ -476,21 +543,24 @@ const CommonModal = ({
                         variant="contained"
                         disabled={loading}
                         sx={{
-                            borderRadius: "12px",
-                            px: 5,
-                            py: 1,
+                            borderRadius: "6px",
+                            px: 4,
+                            py: 0.75,
                             textTransform: "none",
-                            fontWeight: 700,
-                            bgcolor: "#7c3aed",
-                            boxShadow:
-                                "0 8px 15px -3px rgba(124, 58, 237, 0.3)",
+                            fontWeight: 500,
+                            fontSize: "0.8rem",
+                            bgcolor: "#2a2a2a",
+                            color: "#e0e0e0",
                             "&:hover": {
-                                bgcolor: "#6d28d9",
-                                boxShadow: "none",
+                                bgcolor: "#3a3a3a",
+                            },
+                            "&.Mui-disabled": {
+                                bgcolor: "#1e1e1e",
+                                color: "#7a7a7a",
                             },
                         }}
                     >
-                        {loading ? "Please wait..." : saveText}
+                        {loading ? "Processing..." : saveText}
                     </Button>
                 </DialogActions>
             )}
