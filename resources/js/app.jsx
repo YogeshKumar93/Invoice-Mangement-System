@@ -22,8 +22,15 @@ createInertiaApp({
             import.meta.glob("./Pages/**/*.jsx"),
         );
 
+
+          // Landing Page (No Layout)
+    if (name.startsWith("Landing/")) {
+    page.default.layout =
+        page.default.layout || ((page) => page);
+}
+
         // ✅ AUTH PAGES
-        if (name.startsWith("Auth/")) {
+       else if (name.startsWith("Auth/")) {
             page.default.layout =
                 page.default.layout ||
                 ((page) => <AuthLayout>{page}</AuthLayout>);

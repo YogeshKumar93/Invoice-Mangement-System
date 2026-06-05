@@ -4,8 +4,12 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Modules\Auth\Controllers\AuthController;
 
-// Login page - GET request
+
 Route::get('/', function () {
+    return Inertia::render('Landing/LandingPage');
+});
+// Login page - GET request
+Route::get('/login', function () {
     return Inertia::render('Auth/Login');
 })->name('login');
 
