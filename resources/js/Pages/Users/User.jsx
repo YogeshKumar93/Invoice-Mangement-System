@@ -67,6 +67,7 @@ export default function UsersPage() {
             name: row.name || "",
             email: row.email || "",
             phone: row.phone || "",
+            // password: row.password || "",
             status: row.status ?? true,
         });
 
@@ -131,6 +132,7 @@ export default function UsersPage() {
     return (
         <>
             <PaginateTable
+                apiEndpoint="/auth/users"
                 title="Users"
                 data={users}
                 columns={columns}

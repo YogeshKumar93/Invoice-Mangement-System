@@ -26,7 +26,7 @@ export const apiCall = async (config) => {
         // ✅ show loader
         loadingHandler && loadingHandler("Please wait...");
 
-        const res = await axios(config);
+        const res = await axios(axiosConfig);
 
         // ✅ hide loader
         hideHandler && hideHandler();

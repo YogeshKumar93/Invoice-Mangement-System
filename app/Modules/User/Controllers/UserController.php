@@ -40,7 +40,10 @@ class UserController extends Controller
     'password' => Hash::make($request->password),
 ]);
 
-        return back();
+        return response()->json([
+    'success' => true,
+    'message' => 'User created successfully'
+]);
     }
 
     public function update(Request $request, $id)
@@ -76,7 +79,10 @@ class UserController extends Controller
 
         $user->update($data);
 
-        return back();
+        return response()->json([
+            'success' => true,
+            'message' => 'User updated successfully'
+        ]);
     }
 
     public function destroy(UserModel $user)
