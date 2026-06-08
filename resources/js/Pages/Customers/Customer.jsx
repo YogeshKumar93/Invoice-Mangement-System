@@ -5,11 +5,10 @@ import { apiCall } from "@/Utils/apiCall";
 
 const initialFormData = {
     name: "",
-    email: "",
     phone: "",
     address: "",
-    gst_number: "",
-    status: true,
+    aadhaar: "",
+    image: null,
 };
 
 export default function Customer({ customers }) {
@@ -23,17 +22,12 @@ export default function Customer({ customers }) {
     const [loading, setLoading] = useState(false);
 
     const columns = [
-        { key: "name", label: "Name" },
-        { key: "email", label: "Email" },
-        { key: "phone", label: "Phone" },
-        { key: "gst_number", label: "GST Number" },
-        { key: "address", label: "Address" },
-        {
-            key: "status",
-            label: "Status",
-            render: (row) =>
-                row.status ? "Active" : "Inactive",
-        },
+      { key: "name", label: "Name" },
+    { key: "phone", label: "Phone" },
+    { key: "aadhaar", label: "Aadhaar" },
+    { key: "address", label: "Address" },
+    { key: "image", label: "Image" },
+       
         {
             key: "action",
             label: "Action",
@@ -64,11 +58,12 @@ export default function Customer({ customers }) {
 
         setFormData({
             name: row.name || "",
-            email: row.email || "",
+          
             phone: row.phone || "",
-            gst_number: row.gst_number || "",
+          aadhaar: row.aadhaar || "",
             address: row.address || "",
-            status: row.status ?? true,
+            image: row.image || null,
+
         });
 
         setOpenModal(true);
@@ -123,11 +118,11 @@ export default function Customer({ customers }) {
     };
 
     const formFields = [
-        { name: "name", label: "Customer Name", required: true },
-        { name: "email", label: "Email", required: true },
-        { name: "phone", label: "Phone", required: true },
-        { name: "gst_number", label: "GST Number", required: false },
-        { name: "address", label: "Address", required: false },
+          { name: "name", label: "Customer Name" },
+    { name: "phone", label: "Phone" },
+    { name: "aadhaar", label: "Aadhaar Number" },
+    { name: "address", label: "Address" },
+    { name: "image", label: "Image", type: "file" },
     ];
 
     return (
@@ -140,10 +135,9 @@ export default function Customer({ customers }) {
                 searchable={true}
                 searchKeys={[
                     "name",
-                    "email",
                     "phone",
-                        "address",
-                    "gst_number"
+                    "aadhaar",
+                    "address"
                 ]}
                 onAdd={() => {
                     setEditMode(false);

@@ -23,11 +23,11 @@ class CustomerController extends Controller
     {
         $validated = $request->validate([
             'name'   => 'required|string|max:255',
-            'phone' => 'required|string|max:20',
-            'email'  => 'nullable|email|max:255',
+            'phone' => 'nullable|string|max:20',
+
             'address'=> 'nullable|string',
-            'gst_number' => 'nullable|string|max:50',
-            'status' => 'boolean',
+            'aadhaar' => 'nullable|string|max:20',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
         ]);
 
         Customer::create($validated);
@@ -42,11 +42,11 @@ class CustomerController extends Controller
     {
         $validated = $request->validate([
             'name'   => 'required|string|max:255',
-            'phone' => 'required|string|max:20',
-            'email'  => 'nullable|email|max:255',
+            'phone' => 'nullable|string|max:20',
+            
             'address'=> 'nullable|string',
-            'gst_number' => 'nullable|string|max:50',
-            'status' => 'boolean',
+            'aadhaar' => 'nullable|string|max:20',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
         ]);
 
         $customer->update($validated);

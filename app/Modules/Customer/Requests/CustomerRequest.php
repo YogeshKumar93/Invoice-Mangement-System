@@ -15,15 +15,12 @@ class CustomerRequest extends FormRequest
     {
         return [
 
-            'name' => 'required|max:255',
+           'name' => 'required|max:255',
+        'phone' => 'nullable|max:20',
+        'address' => 'nullable',
+        'aadhaar' => 'nullable|max:20',
+        'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
 
-            'email' => 'nullable|email',
-
-            'phone' => 'required|max:20',
-
-            'address' => 'nullable',
-
-            'gst_number' => 'nullable|max:50'
         ];
     }
 }
