@@ -17,17 +17,17 @@ class ProductRequest extends FormRequest
 
             'name' => 'required|max:255',
 
-            'sku' => 'required|max:100',
+            // 'sku' => 'required|max:100',
 
-            'hsn_code' => 'nullable|max:50',
+            // 'hsn_code' => 'nullable|max:50',
 
-            'price' => 'required|numeric',
+            // 'price' => 'required|numeric',
 
-            'gst' => 'required|numeric',
+            // 'gst' => 'required|numeric',
 
-            'description' => 'nullable',
+            // 'description' => 'nullable',
 
-            'status' => 'required|boolean',
+            // 'status' => 'required|boolean',
         ];
     }
 }

@@ -6,10 +6,10 @@ import { apiCall } from "@/Utils/apiCall";
 
 const initialFormData = {
     name: "",
-    sku: "",
-    price: "",
-    gst: "",
-    status: true,
+    // sku: "",
+    // price: "",
+    // gst: "",
+    // status: true,
 };
 
 export default function Product({ products }) {
@@ -24,9 +24,9 @@ export default function Product({ products }) {
 
     const columns = [
         { key: "name", label: "Name" },
-        { key: "sku", label: "SKU" },
-        { key: "price", label: "Price" },
-        { key: "gst", label: "GST" },
+        // { key: "sku", label: "SKU" },
+        // { key: "price", label: "Price" },
+        // { key: "gst", label: "GST" },
         {
             key: "action",
             label: "Action",
@@ -57,10 +57,10 @@ export default function Product({ products }) {
 
         setFormData({
             name: row.name || "",
-            sku: row.sku || "",
-            price: row.price || "",
-            gst: row.gst || "",
-            status: row.status ?? true,
+            // sku: row.sku || "",
+            // price: row.price || "",
+            // gst: row.gst || "",
+            // status: row.status ?? true,
         });
 
         setOpenModal(true);
@@ -116,9 +116,9 @@ export default function Product({ products }) {
 
     const formFields = [
         { name: "name", label: "Product Name", required: true },
-        { name: "sku", label: "SKU", required: true },
-        { name: "price", label: "Price", required: true, type: "number" },
-        { name: "gst", label: "GST %", required: true, type: "number" },
+        // { name: "sku", label: "SKU", required: true },
+        // { name: "price", label: "Price", required: true, type: "number" },
+        // { name: "gst", label: "GST %", required: true, type: "number" },
     ];
 
     return (
@@ -131,9 +131,9 @@ export default function Product({ products }) {
                 searchable={true}
                 searchKeys={[
                     "name",
-                    "sku",
-                    "price",
-                    "gst",
+                    // "sku",
+                    // "price",
+                    // "gst",
                 ]}
                 onAdd={() => {
                     setEditMode(false);

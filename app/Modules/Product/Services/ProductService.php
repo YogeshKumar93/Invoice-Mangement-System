@@ -8,12 +8,15 @@ class ProductService
 {
     public function create(array $data)
     {
+       
         return Product::create($data);
     }
 
     public function update(Product $product,array $data)
     {
-        $product->update($data);
+        $product->update([
+        'name' => $data['name']
+    ]);
 
         return $product;
     }

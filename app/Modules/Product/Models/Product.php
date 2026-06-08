@@ -8,11 +8,11 @@ class Product extends Model
 {
     protected $fillable = [
         'name',
-        'sku',
-        'hsn_code',
-        'price',
-        'gst',
-        'description',
+        // 'sku',
+        // 'hsn_code',
+        // 'price',
+        // 'gst',
+        // 'description',
         'status'
     ];
 }
