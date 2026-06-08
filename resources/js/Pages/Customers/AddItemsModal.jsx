@@ -16,9 +16,7 @@ export default function AddItemsModal({
 
     const handleChange = (index, field, value) => {
         const updated = [...items];
-
         updated[index][field] = value;
-
         setItems(updated);
     };
 
@@ -33,8 +31,8 @@ export default function AddItemsModal({
     };
 
     const removeRow = (index) => {
-        const updated = items.filter((_, i) => i !== index);
-
+        const updated = [...items];
+        updated.splice(index, 1);
         setItems(updated);
     };
 
@@ -46,84 +44,109 @@ export default function AddItemsModal({
     };
 
     return (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-        <div className="bg-white rounded-xl shadow-xl w-full max-w-4xl p-6">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+            <div className="bg-white rounded-xl shadow-xl w-full max-w-3xl">
 
-                <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-bold">
-                    Add Items - {customer?.name}
-                </h2>
+                {/* Header */}
+                <div className="flex items-center justify-between border-b px-5 py-4">
+                    <div>
+                        <h2 className="text-lg font-semibold">
+                            Add Items
+                        </h2>
 
-                {items.map((item, index) => (
-                    <div
-                        key={index}
-                        className="grid grid-cols-3 gap-3 mb-3"
-                    >
-                        <input
-                            type="text"
-                            placeholder="Product Name"
-                            value={item.product_name}
-                            onChange={(e) =>
-                                handleChange(
-                                    index,
-                                    "product_name",
-                                    e.target.value
-                                )
-                            }
-                            className="border p-2 rounded"
-                        />
-
-                        <input
-                            type="number"
-                            placeholder="Price"
-                            value={item.price}
-                            onChange={(e) =>
-                                handleChange(
-                                    index,
-                                    "price",
-                                    e.target.value
-                                )
-                            }
-                            className="border p-2 rounded"
-                        />
-
-                        <button
-                            onClick={() =>
-                                removeRow(index)
-                            }
-                            className="bg-red-500 text-white rounded"
-                        >
-                            Remove
-                        </button>
+                        <p className="text-sm text-gray-500">
+                            Customer : {customer?.name}
+                        </p>
                     </div>
-                ))}
-
-                <div className="flex gap-2 mt-4">
 
                     <button
-                        onClick={addRow}
-                        className="bg-green-600 text-white px-4 py-2 rounded"
+                        onClick={onClose}
+                        className="text-xl font-bold text-gray-500 hover:text-red-500"
                     >
-                        + Add More
+                        ✕
+                    </button>
+                </div>
+
+                {/* Body */}
+                <div className="p-5 space-y-3 max-h-[60vh] overflow-y-auto">
+
+                    {items.map((item, index) => (
+                        <div
+                            key={index}
+                            className="flex items-center gap-3"
+                        >
+                            <input
+                                type="text"
+                                placeholder="Product Name"
+                                value={item.product_name}
+                                onChange={(e) =>
+                                    handleChange(
+                                        index,
+                                        "product_name",
+                                        e.target.value
+                                    )
+                                }
+                                className="flex-1 border rounded-md px-3 py-2"
+                            />
+
+                            <input
+                                type="number"
+                                placeholder="Price"
+                                value={item.price}
+                                onChange={(e) =>
+                                    handleChange(
+                                        index,
+                                        "price",
+                                        e.target.value
+                                    )
+                                }
+                                className="w-32 border rounded-md px-3 py-2"
+                            />
+
+                            {/* Add Button */}
+                            <button
+                                type="button"
+                                onClick={addRow}
+                                className="bg-green-600 text-white px-3 py-2 rounded-md text-sm"
+                            >
+                                +
+                            </button>
+
+                            {/* Remove Button */}
+                            {items.length > 1 && (
+                                <button
+                                    type="button"
+                                    onClick={() => removeRow(index)}
+                                    className="bg-red-500 text-white px-3 py-2 rounded-md text-sm"
+                                >
+                                    -
+                                </button>
+                            )}
+                        </div>
+                    ))}
+
+                </div>
+
+                {/* Footer */}
+                <div className="border-t px-5 py-4 flex justify-end gap-2">
+
+                    <button
+                        onClick={onClose}
+                        className="px-4 py-2 text-sm border rounded-md"
+                    >
+                        Cancel
                     </button>
 
                     <button
                         onClick={handleSave}
-                        className="bg-blue-600 text-white px-4 py-2 rounded"
+                        className="px-4 py-2 text-sm bg-blue-600 text-white rounded-md"
                     >
-                        Save
-                    </button>
-
-                    <button
-                        onClick={onClose}
-                        className="bg-gray-500 text-white px-4 py-2 rounded"
-                    >
-                        Close
+                        Save Items
                     </button>
 
                 </div>
+
             </div>
-        </div>
         </div>
     );
 }
