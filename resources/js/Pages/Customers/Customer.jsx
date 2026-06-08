@@ -26,7 +26,21 @@ export default function Customer({ customers }) {
     { key: "phone", label: "Phone" },
     { key: "aadhaar", label: "Aadhaar" },
     { key: "address", label: "Address" },
-    { key: "image", label: "Image" },
+   {
+    key: "image",
+    label: "Image",
+    render: (row) =>
+        row.image ? (
+            <img
+                src={`/storage/${row.image}`}
+                alt="customer"
+                className="h-12 w-12 object-cover rounded"
+            />
+        ) : (
+            "No Image"
+        ),
+},
+
        
         {
             key: "action",
@@ -45,12 +59,14 @@ export default function Customer({ customers }) {
         },
     ];
 
-    const handleChange = (e) => {
-        setFormData((prev) => ({
-            ...prev,
-            [e.target.name]: e.target.value,
-        }));
-    };
+   const handleChange = (e) => {
+    const { name, value, files, type } = e.target;
+
+    setFormData((prev) => ({
+        ...prev,
+        [name]: type === "file" ? files[0] : value,
+    }));
+};
 
     const handleEditClick = (row) => {
         setEditMode(true);
@@ -74,10 +90,17 @@ export default function Customer({ customers }) {
         setErrors({});
 
         try {
+
+            const fd = new FormData();
+
+Object.keys(formData).forEach((key) => {
+    fd.append(key, formData[key]);
+});
+
             await apiCall({
                 url: "/customers",
                 method: "POST",
-                data: formData,
+                data: fd,
                 reload: true,
             });
         } catch (error) {
@@ -93,10 +116,16 @@ export default function Customer({ customers }) {
         setErrors({});
 
         try {
+
+            const fd = new FormData();
+
+Object.keys(formData).forEach((key) => {
+    fd.append(key, formData[key]);
+});
             await apiCall({
                 url: `/customers/${editId}`,
                 method: "PUT",
-                data: formData,
+                data: fd,
                 reload: true,
             });
         } catch (error) {
@@ -125,6 +154,8 @@ export default function Customer({ customers }) {
     { name: "image", label: "Image", type: "file" },
     ];
 
+
+    console.log(formData.image);
     return (
         <>
             <PaginateTable

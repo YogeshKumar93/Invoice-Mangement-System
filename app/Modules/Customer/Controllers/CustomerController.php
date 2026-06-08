@@ -30,6 +30,11 @@ class CustomerController extends Controller
             'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
         ]);
 
+         if ($request->hasFile('image')) {
+        $validated['image'] = $request->file('image')
+            ->store('customers', 'public');
+    }
+
         Customer::create($validated);
 
         return response()->json([
