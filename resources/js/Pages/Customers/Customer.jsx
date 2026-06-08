@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import PaginateTable from "@/Components/Common/PaginateTable";
 import CommonModal from "@/Components/Common/CommonModal";
 import { apiCall } from "@/Utils/apiCall";
+import AddItemsModal from "./AddItemsModal";
 
 const initialFormData = {
     name: "",
@@ -20,28 +21,43 @@ export default function Customer({ customers }) {
 
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false);
+    const [itemModalOpen, setItemModalOpen] = useState(false);
+    const [selectedCustomer, setSelectedCustomer] = useState(null);
 
     const columns = [
-      { key: "name", label: "Name" },
-    { key: "phone", label: "Phone" },
-    { key: "aadhaar", label: "Aadhaar" },
-    { key: "address", label: "Address" },
-   {
-    key: "image",
-    label: "Image",
-    render: (row) =>
-        row.image ? (
-            <img
-                src={`/storage/${row.image}`}
-                alt="customer"
-                className="h-12 w-12 object-cover rounded"
-            />
-        ) : (
-            "No Image"
-        ),
-},
+        { key: "name", label: "Name" },
+        { key: "phone", label: "Phone" },
+        { key: "aadhaar", label: "Aadhaar" },
+        { key: "address", label: "Address" },
+        {
+            key: "image",
+            label: "Image",
+            render: (row) =>
+                row.image ? (
+                    <img
+                        src={`/storage/${row.image}`}
+                        alt="customer"
+                        className="h-12 w-12 object-cover rounded"
+                    />
+                ) : (
+                    "No Image"
+                ),
+        },
 
-       
+        {
+            key: "add_items",
+            label: "Add Items",
+            render: (row) => (
+                <button
+                    onClick={() => handleAddItems(row)}
+                    className="px-3 py-1 bg-green-600 text-white rounded"
+                >
+                    Add Items
+                </button>
+            ),
+        },
+
+
         {
             key: "action",
             label: "Action",
@@ -59,14 +75,14 @@ export default function Customer({ customers }) {
         },
     ];
 
-   const handleChange = (e) => {
-    const { name, value, files, type } = e.target;
+    const handleChange = (e) => {
+        const { name, value, files, type } = e.target;
 
-    setFormData((prev) => ({
-        ...prev,
-        [name]: type === "file" ? files[0] : value,
-    }));
-};
+        setFormData((prev) => ({
+            ...prev,
+            [name]: type === "file" ? files[0] : value,
+        }));
+    };
 
     const handleEditClick = (row) => {
         setEditMode(true);
@@ -74,9 +90,9 @@ export default function Customer({ customers }) {
 
         setFormData({
             name: row.name || "",
-          
+
             phone: row.phone || "",
-          aadhaar: row.aadhaar || "",
+            aadhaar: row.aadhaar || "",
             address: row.address || "",
             image: row.image || null,
 
@@ -93,9 +109,9 @@ export default function Customer({ customers }) {
 
             const fd = new FormData();
 
-Object.keys(formData).forEach((key) => {
-    fd.append(key, formData[key]);
-});
+            Object.keys(formData).forEach((key) => {
+                fd.append(key, formData[key]);
+            });
 
             await apiCall({
                 url: "/customers",
@@ -119,9 +135,9 @@ Object.keys(formData).forEach((key) => {
 
             const fd = new FormData();
 
-Object.keys(formData).forEach((key) => {
-    fd.append(key, formData[key]);
-});
+            Object.keys(formData).forEach((key) => {
+                fd.append(key, formData[key]);
+            });
             await apiCall({
                 url: `/customers/${editId}`,
                 method: "PUT",
@@ -136,6 +152,11 @@ Object.keys(formData).forEach((key) => {
         }
     };
 
+    const handleAddItems = (customer) => {
+        setSelectedCustomer(customer);
+        setItemModalOpen(true);
+    };
+
     const handleDelete = async (row) => {
         if (!confirm("Delete this customer?")) return;
 
@@ -147,11 +168,11 @@ Object.keys(formData).forEach((key) => {
     };
 
     const formFields = [
-          { name: "name", label: "Customer Name" },
-    { name: "phone", label: "Phone" },
-    { name: "aadhaar", label: "Aadhaar Number" },
-    { name: "address", label: "Address" },
-    { name: "image", label: "Image", type: "file" },
+        { name: "name", label: "Customer Name" },
+        { name: "phone", label: "Phone" },
+        { name: "aadhaar", label: "Aadhaar Number" },
+        { name: "address", label: "Address" },
+        { name: "image", label: "Image", type: "file" },
     ];
 
 
@@ -191,6 +212,12 @@ Object.keys(formData).forEach((key) => {
                 onSave={editMode ? handleEdit : handleSave}
                 errors={errors}
                 saveText={editMode ? "Update Customer" : "Save Customer"}
+            />
+
+            <AddItemsModal
+                open={itemModalOpen}
+                onClose={() => setItemModalOpen(false)}
+                customer={selectedCustomer}
             />
         </>
     );
