@@ -36,6 +36,11 @@ export default function AddItemsModal({
         setItems(updated);
     };
 
+    const totalAmount = items.reduce(
+        (sum, item) => sum + (Number(item.price) || 0),
+        0
+    );
+
     const handleSave = () => {
         console.log(customer);
         console.log(items);
@@ -59,12 +64,20 @@ export default function AddItemsModal({
                         </p>
                     </div>
 
-                    <button
-                        onClick={onClose}
-                        className="text-xl font-bold text-gray-500 hover:text-red-500"
-                    >
-                        ✕
-                    </button>
+                    <div className="flex items-center gap-3">
+
+                        <div className="bg-green-100 text-green-700 px-3 py-1 rounded-md text-sm font-semibold">
+                            ₹ {totalAmount}
+                        </div>
+
+                        <button
+                            onClick={onClose}
+                            className="text-xl font-bold text-gray-500 hover:text-red-500"
+                        >
+                            ✕
+                        </button>
+
+                    </div>
                 </div>
 
                 {/* Body */}
