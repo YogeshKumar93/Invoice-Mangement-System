@@ -3,6 +3,7 @@ import PaginateTable from "@/Components/Common/PaginateTable";
 import CommonModal from "@/Components/Common/CommonModal";
 import { apiCall } from "@/Utils/apiCall";
 import AddItemsModal from "./AddItemsModal";
+import { router } from "@inertiajs/react";
 
 const initialFormData = {
     name: "",
@@ -56,6 +57,19 @@ export default function Customer({ customers }) {
                 </button>
             ),
         },
+
+        {
+    key: "records",
+    label: "Records",
+    render: (row) => (
+        <button
+            onClick={() => handleRecords(row)}
+            className="px-3 py-1 bg-blue-600 text-white rounded"
+        >
+            Records
+        </button>
+    ),
+},
 
 
         {
@@ -156,6 +170,10 @@ export default function Customer({ customers }) {
         setSelectedCustomer(customer);
         setItemModalOpen(true);
     };
+
+    const handleRecords = (customer) => {
+    router.visit(`/customers/${customer.id}/records`);
+};
 
     const handleDelete = async (row) => {
         if (!confirm("Delete this customer?")) return;

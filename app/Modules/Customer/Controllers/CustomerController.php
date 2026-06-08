@@ -71,4 +71,14 @@ class CustomerController extends Controller
             'message' => 'Customer deleted successfully'
         ]);
     }
+
+    public function records(Customer $customer)
+{
+    return Inertia::render(
+        'Customers/CustomerRecords',
+        [
+            'customer' => $customer
+        ]
+    );
+}
 }
