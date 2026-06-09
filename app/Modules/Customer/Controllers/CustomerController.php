@@ -5,6 +5,7 @@ namespace App\Modules\Customer\Controllers;
 use App\Http\Controllers\Controller;
 use App\Modules\Customer\Models\Customer;
 use Illuminate\Http\Request;
+use App\Modules\Product\Models\Product;
 use Inertia\Inertia;
 
 class CustomerController extends Controller
@@ -81,4 +82,16 @@ class CustomerController extends Controller
         ]
     );
 }
+
+
+public function products()
+{
+    return response()->json(
+        Product::select(
+            'id',
+            'name'
+        )->get()
+    );
+}
+
 }

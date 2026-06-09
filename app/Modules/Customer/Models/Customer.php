@@ -13,4 +13,11 @@ class Customer extends Model
     'aadhaar',
     'image',
     ];
+
+
+    public function records()
+{
+    return $this->hasMany(CustomerRecord::class);
+}
+
 }

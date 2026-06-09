@@ -17,7 +17,9 @@ Route::name('customers.')->group(function () {
     Route::delete('/customers/{customer}', [CustomerController::class, 'destroy'])
         ->name('destroy');
 
-        Route::get('/customers/{customer}/records',[CustomerController::class, 'records']
-);
+        Route::get('/customers/{customer}/records',[CustomerController::class, 'records']);
+        Route::post('/customers/{customer}/records',[CustomerController::class, 'records']);
+
+        Route::get('/customer-products',[CustomerController::class,'products']);
 
 });

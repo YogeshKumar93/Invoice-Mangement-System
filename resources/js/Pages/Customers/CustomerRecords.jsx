@@ -3,70 +3,67 @@ import PaginateTable from "@/Components/Common/PaginateTable";
 import { usePage } from "@inertiajs/react";
 
 export default function CustomerRecords() {
-    const { customer } = usePage().props;
+    // const { customer } = usePage().props;
 
-    const columns = [
-        {
-            key: "date",
-            label: "Date",
-        },
-        {
-            key: "items",
-            label: "Items",
-        },
-        {
-            key: "amount",
-            label: "Amount",
-            render: (row) => (
-                <span className="font-medium">
-                    ₹{row.amount}
-                </span>
-            ),
-        },
-        {
-            key: "status",
-            label: "Status",
-            render: (row) => (
-                <span
-                    className={`px-2 py-1 rounded text-xs ${
-                        row.status === "Paid"
-                            ? "bg-green-100 text-green-700"
-                            : "bg-yellow-100 text-yellow-700"
-                    }`}
-                >
-                    {row.status}
-                </span>
-            ),
-        },
-        {
-            key: "edit",
-            label: "Edit",
-            render: (row) => (
-                <button
-                    className="px-3 py-1 bg-blue-600 text-white rounded text-sm"
-                >
-                    Edit
-                </button>
-            ),
-        },
-    ];
+    // const columns = [
+    //     {
+    //         key: "date",
+    //         label: "Date",
+    //     },
+    //     {
+    //         key: "items",
+    //         label: "Items",
+    //     },
+    //     {
+    //         key: "amount",
+    //         label: "Amount",
+    //         render: (row) => (
+    //             <span className="font-medium">
+    //                 ₹{row.amount}
+    //             </span>
+    //         ),
+    //     },
+    //     {
+    //         key: "status",
+    //         label: "Status",
+    //         render: (row) => (
+    //             <span
+    //                 className={`px-2 py-1 rounded text-xs ${
+    //                     row.status === "Paid"
+    //                         ? "bg-green-100 text-green-700"
+    //                         : "bg-yellow-100 text-yellow-700"
+    //                 }`}
+    //             >
+    //                 {row.status}
+    //             </span>
+    //         ),
+    //     },
+    //     {
+    //         key: "edit",
+    //         label: "Edit",
+    //         render: (row) => (
+    //             <button
+    //                 className="px-3 py-1 bg-blue-600 text-white rounded text-sm"
+    //             >
+    //                 Edit
+    //             </button>
+    //         ),
+    //     },
+    // ];
 
-    const data = [
-        {
-            id: 1,
-            date: "08-06-2026",
-            items: "Milk, Bread",
-            amount: 250,
-            status: "Pending",
-        },
-        {
-            id: 2,
-            date: "07-06-2026",
-            items: "Eggs",
-            amount: 120,
-            status: "Paid",
-        },
-    ];
+        const columns = [
+            {
+    key: "items",
+    label: "Items",
+    render: (row) =>
+        row.items
+            .map(item =>
+                item.product.name
+            )
+            .join(", ")
+},];
+
+   const { customer, records} = usePage().props;
 
     return (
         <div className="p-6">
@@ -100,7 +97,7 @@ export default function CustomerRecords() {
             <PaginateTable
                 title="Customer Ledger"
                 columns={columns}
-                data={data}
+                data={records}
                 searchable={true}
                 searchKeys={[
                     "date",

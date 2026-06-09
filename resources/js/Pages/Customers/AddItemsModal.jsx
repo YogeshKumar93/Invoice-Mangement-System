@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import { apiCall } from "@/Utils/apiCall";
+import React, { useEffect, useState } from "react";
 
 export default function AddItemsModal({
     open,
@@ -7,12 +8,32 @@ export default function AddItemsModal({
 }) {
     const [items, setItems] = useState([
         {
-            product_name: "",
+            product_id: "",
             price: "",
         },
     ]);
 
-    if (!open) return null;
+    const [products, setProducts] = useState([]);
+
+    useEffect(() => {
+        if (!open) return;
+
+        const fetchProducts = async () => {
+            try {
+                const res = await apiCall({
+                    url: "/customer-products",
+                    method: "GET",
+                });
+                 console.log("Products Response:", res);
+
+                setProducts(res || []);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        fetchProducts();
+    }, [open]);
+    console.log(products);
 
     const handleChange = (index, field, value) => {
         const updated = [...items];
@@ -24,7 +45,7 @@ export default function AddItemsModal({
         setItems([
             ...items,
             {
-                product_name: "",
+                product_id: "",
                 price: "",
             },
         ]);
@@ -41,12 +62,34 @@ export default function AddItemsModal({
         0
     );
 
-    const handleSave = () => {
-        console.log(customer);
-        console.log(items);
+    const handleSave = async () => {
+        try {
+            await apiCall({
+                 url: `/customers/${customer.id}/records`,
+                method: "POST",
+                data: {
+                    customer_id: customer?.id,
+                    items,
+                },
+                reload: true,
+            });
 
-        onClose();
+            setItems([
+                {
+                    product_id: "",
+                    price: "",
+                },
+            ]);
+
+            onClose();
+        } catch (error) {
+            console.log(error);
+        }
     };
+
+    // IMPORTANT:
+    // return null hamesha hooks ke baad
+    if (!open) return null;
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
@@ -88,19 +131,30 @@ export default function AddItemsModal({
                             key={index}
                             className="flex items-center gap-3"
                         >
-                            <input
-                                type="text"
-                                placeholder="Product Name"
-                                value={item.product_name}
+                            <select
+                                value={item.product_id}
                                 onChange={(e) =>
                                     handleChange(
                                         index,
-                                        "product_name",
+                                        "product_id",
                                         e.target.value
                                     )
                                 }
                                 className="flex-1 border rounded-md px-3 py-2"
-                            />
+                            >
+                                <option value="">
+                                    Select Product
+                                </option>
+
+                                {products.map((product) => (
+                                    <option
+                                        key={product.id}
+                                        value={product.id}
+                                    >
+                                        {product.name}
+                                    </option>
+                                ))}
+                            </select>
 
                             <input
                                 type="number"
@@ -116,21 +170,21 @@ export default function AddItemsModal({
                                 className="w-32 border rounded-md px-3 py-2"
                             />
 
-                            {/* Add Button */}
                             <button
                                 type="button"
                                 onClick={addRow}
-                                className="bg-green-600 text-white px-3 py-2 rounded-md text-sm"
+                                className="bg-green-600 text-white px-3 py-2 rounded-md"
                             >
                                 +
                             </button>
 
-                            {/* Remove Button */}
                             {items.length > 1 && (
                                 <button
                                     type="button"
-                                    onClick={() => removeRow(index)}
-                                    className="bg-red-500 text-white px-3 py-2 rounded-md text-sm"
+                                    onClick={() =>
+                                        removeRow(index)
+                                    }
+                                    className="bg-red-500 text-white px-3 py-2 rounded-md"
                                 >
                                     -
                                 </button>
