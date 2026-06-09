@@ -3,6 +3,7 @@
 namespace App\Modules\Customer\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Modules\Product\Models\Product;
 
 class CustomerRecordItem extends Model
 {

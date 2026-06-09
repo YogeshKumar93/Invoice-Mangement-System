@@ -2,6 +2,9 @@
 
 namespace App\Modules\Customer\Controllers;
 
+use App\Modules\Customer\Models\CustomerRecord;
+use App\Modules\Customer\Models\CustomerRecordItem;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Modules\Customer\Models\Customer;
 use Illuminate\Http\Request;

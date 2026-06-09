@@ -3,67 +3,31 @@ import PaginateTable from "@/Components/Common/PaginateTable";
 import { usePage } from "@inertiajs/react";
 
 export default function CustomerRecords() {
-    // const { customer } = usePage().props;
+    const { customer, records } = usePage().props;
+    const props = usePage().props;
 
-    // const columns = [
-    //     {
-    //         key: "date",
-    //         label: "Date",
-    //     },
-    //     {
-    //         key: "items",
-    //         label: "Items",
-    //     },
-    //     {
-    //         key: "amount",
-    //         label: "Amount",
-    //         render: (row) => (
-    //             <span className="font-medium">
-    //                 ₹{row.amount}
-    //             </span>
-    //         ),
-    //     },
-    //     {
-    //         key: "status",
-    //         label: "Status",
-    //         render: (row) => (
-    //             <span
-    //                 className={`px-2 py-1 rounded text-xs ${
-    //                     row.status === "Paid"
-    //                         ? "bg-green-100 text-green-700"
-    //                         : "bg-yellow-100 text-yellow-700"
-    //                 }`}
-    //             >
-    //                 {row.status}
-    //             </span>
-    //         ),
-    //     },
-    //     {
-    //         key: "edit",
-    //         label: "Edit",
-    //         render: (row) => (
-    //             <button
-    //                 className="px-3 py-1 bg-blue-600 text-white rounded text-sm"
-    //             >
-    //                 Edit
-    //             </button>
-    //         ),
-    //     },
-    // ];
+   const columns = [
+    {
+        key: "items",
+        label: "Items",
+        render: (row) =>
+            row.items?.map(
+                item => item.product?.name
+            ).join(", "),
+    },
+    {
+        key: "total_amount",
+        label: "Amount",
+        render: (row) => `₹ ${row.total_amount}`,
+    },
+    {
+        key: "status",
+        label: "Status",
+    },
+];
 
-        const columns = [
-            {
-    key: "items",
-    label: "Items",
-    render: (row) =>
-        row.items
-            .map(item =>
-                item.product.name
-            )
-            .join(", ")
-},];
-
-   const { customer, records} = usePage().props;
+console.log("jkla afjia ajka",records);
+console.log("props props prp",props);
 
     return (
         <div className="p-6">

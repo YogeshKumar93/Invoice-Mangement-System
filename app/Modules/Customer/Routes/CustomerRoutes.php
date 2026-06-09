@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Modules\Customer\Controllers\CustomerController;
+// use App\Modules\Customer\Controllers\CustomerRecordController;
 
 Route::name('customers.')->group(function () {
 
@@ -17,8 +18,8 @@ Route::name('customers.')->group(function () {
     Route::delete('/customers/{customer}', [CustomerController::class, 'destroy'])
         ->name('destroy');
 
-        Route::get('/customers/{customer}/records',[CustomerController::class, 'records']);
-        Route::post('/customers/{customer}/records',[CustomerController::class, 'records']);
+        // Route::get('/customers/{customer}/records',[CustomerRecordController::class, 'index']);
+        // Route::post('/customers/{customer}/records',[CustomerRecordController::class, 'store']);
 
         Route::get('/customer-products',[CustomerController::class,'products']);
 
