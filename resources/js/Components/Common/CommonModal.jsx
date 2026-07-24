@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
     Dialog,
     DialogContent,
@@ -14,9 +14,11 @@ import {
     Autocomplete,
     FormControlLabel,
     Divider,
+    InputAdornment,
 } from "@mui/material";
-import { X, Save, AlertCircle } from "lucide-react";
+import { X, Save, AlertCircle, FileText } from "lucide-react";
 import Checkbox from "../Checkbox";
+import themeColors from "../../Utils/setThemeColors"; // Import your theme colors
 
 const CommonFormField = ({
     field,
@@ -45,39 +47,54 @@ const CommonFormField = ({
             ? errors[name]
             : errors[name]?.message || "";
 
+    // Compact floating label styles with bolder borders
     const inputSx = {
         "& .MuiOutlinedInput-root": {
-            bgcolor: "#1e1e1e",
-            borderRadius: "8px",
+            bgcolor: themeColors.white,
+            borderRadius: "6px",
             transition: "all 0.2s",
             "& fieldset": {
-                border: "1px solid #3a3a3a",
+                border: `2px solid ${themeColors.border}`, // Bolder border
                 boxShadow: "none",
             },
-            "&:hover fieldset": { borderColor: "#5a5a5a" },
+            "&:hover fieldset": { 
+                borderColor: themeColors.secondary,
+                borderWidth: "2px",
+            },
             "&.Mui-focused fieldset": {
-                borderWidth: "1px",
-                borderColor: "#9a9a9a",
+                borderWidth: "2px",
+                borderColor: themeColors.secondary,
             },
         },
         "& .MuiInputBase-input": {
-            py: 1.5,
-            fontSize: "0.875rem",
-            color: "#e0e0e0",
+            py: 1,
+            fontSize: "0.8rem",
+            color: themeColors.text,
             "&::placeholder": {
-                color: "#7a7a7a",
+                color: themeColors.textLight,
                 opacity: 0.8,
             },
         },
         "& .MuiInputLabel-root": {
-            color: "#9a9a9a",
+            color: themeColors.textLight,
+            fontSize: "0.8rem",
             "&.Mui-focused": {
-                color: "#c0c0c0",
+                color: themeColors.secondary,
+            },
+            "&.Mui-error": {
+                color: themeColors.error,
             },
         },
         "& .MuiFormHelperText-root": {
-            color: "#f44336",
-            fontSize: "0.7rem",
+            color: themeColors.error,
+            fontSize: "0.65rem",
+            marginLeft: 0,
+            marginTop: "2px",
+        },
+        "& .MuiInputLabel-shrink": {
+            transform: "translate(14px, -6px) scale(0.8)",
+            backgroundColor: themeColors.white,
+            padding: "0 4px",
         },
     };
 
@@ -101,18 +118,16 @@ const CommonFormField = ({
         helperText: errorMessage,
         disabled: loading,
         sx: inputSx,
+        label: label,
+        required: required,
         InputProps: {
             startAdornment: StartIcon ? (
-                <Box
-                    sx={{
-                        mr: 1.5,
-                        color: "#9a9a9a",
-                        display: "flex",
-                        opacity: 0.7,
-                    }}
-                >
-                    <StartIcon size={18} />
-                </Box>
+                <InputAdornment position="start" sx={{ ml: 0.5 }}>
+                    <StartIcon 
+                        size={16} 
+                        color={formData[name] ? themeColors.secondary : themeColors.textLight}
+                    />
+                </InputAdornment>
             ) : null,
         },
     };
@@ -120,21 +135,6 @@ const CommonFormField = ({
     if (type === "autocomplete") {
         return (
             <Box>
-                <Typography
-                    variant="body2"
-                    sx={{
-                        mb: 0.75,
-                        fontWeight: 500,
-                        color: "#b0b0b0",
-                        fontSize: "0.7rem",
-                        textTransform: "uppercase",
-                        letterSpacing: "0.5px",
-                    }}
-                >
-                    {label}{" "}
-                    {required && <span style={{ color: "#f44336" }}>*</span>}
-                </Typography>
-
                 <Autocomplete
                     options={options}
                     getOptionLabel={(opt) => opt?.label || ""}
@@ -149,10 +149,12 @@ const CommonFormField = ({
                     renderInput={(params) => (
                         <TextField
                             {...params}
+                            label={label}
                             placeholder={placeholder || `Select ${label}`}
                             error={!!errorMessage}
                             helperText={errorMessage}
                             disabled={loading}
+                            required={required}
                             sx={{
                                 ...inputSx,
                                 "& .MuiAutocomplete-inputRoot": {
@@ -162,16 +164,12 @@ const CommonFormField = ({
                             InputProps={{
                                 ...params.InputProps,
                                 startAdornment: StartIcon ? (
-                                    <Box
-                                        sx={{
-                                            mr: 1.5,
-                                            color: "#9a9a9a",
-                                            display: "flex",
-                                            opacity: 0.7,
-                                        }}
-                                    >
-                                        <StartIcon size={18} />
-                                    </Box>
+                                    <InputAdornment position="start" sx={{ ml: 0.5 }}>
+                                        <StartIcon 
+                                            size={16} 
+                                            color={formData[name] ? themeColors.secondary : themeColors.textLight}
+                                        />
+                                    </InputAdornment>
                                 ) : null,
                             }}
                         />
@@ -185,24 +183,11 @@ const CommonFormField = ({
     if (type === "select") {
         return (
             <Box>
-                <Typography
-                    variant="body2"
-                    sx={{
-                        mb: 0.75,
-                        fontWeight: 500,
-                        color: "#b0b0b0",
-                        fontSize: "0.7rem",
-                        textTransform: "uppercase",
-                        letterSpacing: "0.5px",
-                    }}
-                >
-                    {label}{" "}
-                    {required && <span style={{ color: "#f44336" }}>*</span>}
-                </Typography>
                 <TextField
                     select
                     fullWidth
                     name={name}
+                    label={label}
                     value={formData[name] ?? ""}
                     onChange={(e) => {
                         const value = e.target.value;
@@ -216,12 +201,13 @@ const CommonFormField = ({
                     error={!!errorMessage}
                     helperText={errorMessage}
                     disabled={loading}
+                    required={required}
                     sx={inputSx}
                     SelectProps={{
                         displayEmpty: true,
                         renderValue: (selected) => {
                             if (!selected || selected === "") {
-                                return <em style={{ color: '#7a7a7a' }}>Select {label}</em>;
+                                return <em style={{ color: themeColors.textLight, fontSize: "0.8rem" }}>Select {label}</em>;
                             }
                             const option = options.find(opt => opt.value === selected);
                             return option?.label || selected;
@@ -229,16 +215,12 @@ const CommonFormField = ({
                     }}
                     InputProps={{
                         startAdornment: StartIcon ? (
-                            <Box
-                                sx={{
-                                    mr: 1.5,
-                                    color: "#9a9a9a",
-                                    display: "flex",
-                                    opacity: 0.7,
-                                }}
-                            >
-                                <StartIcon size={18} />
-                            </Box>
+                            <InputAdornment position="start" sx={{ ml: 0.5 }}>
+                                <StartIcon 
+                                    size={16} 
+                                    color={formData[name] ? themeColors.secondary : themeColors.textLight}
+                                />
+                            </InputAdornment>
                         ) : null,
                     }}
                 >
@@ -249,7 +231,7 @@ const CommonFormField = ({
                         <MenuItem
                             key={opt.value}
                             value={opt.value}
-                            sx={{ fontSize: "0.875rem" }}
+                            sx={{ fontSize: "0.8rem" }}
                         >
                             {opt.label}
                         </MenuItem>
@@ -266,7 +248,9 @@ const CommonFormField = ({
                 fullWidth
                 name={field.name}
                 onChange={handleChange}
+                label={label}
                 InputLabelProps={{ shrink: true }}
+                sx={inputSx}
             />
         );
     }
@@ -285,29 +269,27 @@ const CommonFormField = ({
                                 setValue(field.name, checked);
                             }
                         }}
+                        sx={{
+                            color: themeColors.secondary,
+                            '&.Mui-checked': {
+                                color: themeColors.secondary,
+                            },
+                        }}
                     />
                 }
                 label={field.label}
+                sx={{
+                    '& .MuiFormControlLabel-label': {
+                        color: themeColors.text,
+                        fontSize: '0.8rem',
+                    }
+                }}
             />
         );
     }
 
     return (
         <Box>
-            <Typography
-                variant="body2"
-                sx={{
-                    mb: 0.75,
-                    fontWeight: 500,
-                    color: "#b0b0b0",
-                    fontSize: "0.7rem",
-                    textTransform: "uppercase",
-                    letterSpacing: "0.5px",
-                }}
-            >
-                {label}{" "}
-                {required && <span style={{ color: "#f44336" }}>*</span>}
-            </Typography>
             <TextField {...commonProps} type={type || "text"} />
         </Box>
     );
@@ -342,19 +324,20 @@ const CommonModal = ({
                 sx: {
                     borderRadius: "12px",
                     overflow: "hidden",
-                    bgcolor: "#1a1a1a",
-                    boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.5)",
+                    bgcolor: themeColors.white,
+                    boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
                 },
             }}
         >
-            {/* Header Section - New Design */}
+            {/* Header Section - White Background with Secondary Text */}
             <Box
                 sx={{
-                    pt: 3,
+                    pt: 2.5,
                     pb: 2,
                     px: 3,
-                    bgcolor: "#121212",
-                    borderBottom: "1px solid #2a2a2a",
+                    bgcolor: themeColors.white, // White header
+                    borderBottom: `2px solid ${themeColors.secondary}`, // Bolder secondary border
+                    position: 'relative',
                 }}
             >
                 <Box
@@ -364,64 +347,96 @@ const CommonModal = ({
                         justifyContent: "space-between",
                     }}
                 >
-                    <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                    {/* Logo - Left */}
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, flex: 1 }}>
                         <Box
                             sx={{
-                                width: 40,
-                                height: 40,
-                                bgcolor: "#2a2a2a",
+                                width: 36,
+                                height: 36,
+                                bgcolor: themeColors.secondary,
                                 borderRadius: "8px",
                                 display: "flex",
                                 alignItems: "center",
                                 justifyContent: "center",
+                                boxShadow: `0 3px 10px ${themeColors.secondary}40`,
+                                flexShrink: 0,
                             }}
                         >
-                            <Save size={20} color="#c0c0c0" />
+                            <FileText size={20} color={themeColors.white} />
                         </Box>
-                        <Box>
-                            <Typography
-                                variant="h6"
-                                sx={{
-                                    color: "#e0e0e0",
-                                    fontWeight: 600,
-                                    fontSize: "1.1rem",
-                                    letterSpacing: "0px",
-                                }}
-                            >
-                                {title || "IMS Form"}
-                            </Typography>
+                    </Box>
+
+                    {/* Title - Center with Secondary Color */}
+                    <Box sx={{ 
+                        display: "flex", 
+                        alignItems: "center", 
+                        gap: 1.5,
+                        position: 'absolute',
+                        left: '50%',
+                        transform: 'translateX(-50%)',
+                    }}>
+                        <Typography
+                            variant="h6"
+                            sx={{
+                                color: themeColors.secondary, // Secondary text color
+                                fontWeight: 700,
+                                fontSize: "1rem",
+                                letterSpacing: "0px",
+                            }}
+                        >
+                            {title || "IMS"}
+                        </Typography>
+                        <Box
+                            sx={{
+                                px: 1,
+                                py: 0.25,
+                                bgcolor: themeColors.secondary,
+                                borderRadius: "3px",
+                            }}
+                        >
                             <Typography
                                 variant="caption"
                                 sx={{
-                                    color: "#7a7a7a",
-                                    fontSize: "0.7rem",
+                                    color: themeColors.white,
+                                    fontWeight: 600,
+                                    fontSize: "0.5rem",
+                                    letterSpacing: "0.5px",
+                                    textTransform: "uppercase",
                                 }}
                             >
-                                Fill in the details below
+                                Form
                             </Typography>
                         </Box>
                     </Box>
-                    
-                    <IconButton
-                        onClick={onClose}
-                        sx={{
-                            color: "#9a9a9a",
-                            "&:hover": {
-                                color: "#e0e0e0",
-                                bgcolor: "#2a2a2a",
-                            },
-                        }}
-                    >
-                        <X size={20} />
-                    </IconButton>
+
+                    {/* Cross Icon - Right with rounded hover */}
+                    <Box sx={{ flex: 1, display: "flex", justifyContent: "flex-end" }}>
+                        <IconButton
+                            onClick={onClose}
+                            sx={{
+                                color: themeColors.textLight,
+                                width: 32,
+                                height: 32,
+                                borderRadius: "50%",
+                                transition: 'all 0.2s ease',
+                                "&:hover": {
+                                    color: themeColors.secondary,
+                                    bgcolor: `${themeColors.secondary}10`,
+                                    transform: 'rotate(90deg)',
+                                },
+                            }}
+                        >
+                            <X size={18} />
+                        </IconButton>
+                    </Box>
                 </Box>
 
-                {/* Progress Indicator */}
-                <Box sx={{ mt: 2 }}>
+                {/* Progress Indicator with Secondary Color */}
+                <Box sx={{ mt: 1.5 }}>
                     <Box
                         sx={{
-                            height: "3px",
-                            bgcolor: "#2a2a2a",
+                            height: "3px", // Slightly thicker
+                            bgcolor: `${themeColors.secondary}20`,
                             borderRadius: "2px",
                             overflow: "hidden",
                         }}
@@ -430,7 +445,7 @@ const CommonModal = ({
                             sx={{
                                 width: "60%",
                                 height: "100%",
-                                bgcolor: "#9a9a9a",
+                                bgcolor: themeColors.secondary,
                                 borderRadius: "2px",
                             }}
                         />
@@ -438,7 +453,7 @@ const CommonModal = ({
                 </Box>
             </Box>
 
-            <DialogContent sx={{ px: 3, py: 3, overflowY: "auto" }}>
+            <DialogContent sx={{ px: 3, py: 2, overflowY: "auto" }}>
                 {children ? (
                     children
                 ) : (
@@ -446,8 +461,8 @@ const CommonModal = ({
                         sx={{
                             display: "grid",
                             gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
-                            columnGap: 2.5,
-                            rowGap: 2,
+                            columnGap: 2,
+                            rowGap: 1.5,
                         }}
                     >
                         {fieldConfig.map((field, index) => (
@@ -483,20 +498,20 @@ const CommonModal = ({
                 {Object.keys(errors).length > 0 && (
                     <Box
                         sx={{
-                            mt: 2,
-                            p: 1.5,
-                            bgcolor: "#2a1a1a",
-                            borderRadius: "8px",
-                            border: "1px solid #4a2a2a",
+                            mt: 1.5,
+                            p: 1,
+                            bgcolor: `${themeColors.error}10`,
+                            borderRadius: "6px",
+                            border: `1px solid ${themeColors.error}30`,
                             display: "flex",
                             alignItems: "center",
                             gap: 1,
                         }}
                     >
-                        <AlertCircle size={16} color="#f44336" />
+                        <AlertCircle size={14} color={themeColors.error} />
                         <Typography
                             variant="caption"
-                            sx={{ color: "#f44336", fontSize: "0.7rem" }}
+                            sx={{ color: themeColors.error, fontSize: "0.65rem" }}
                         >
                             Please fix the errors before proceeding
                         </Typography>
@@ -508,11 +523,11 @@ const CommonModal = ({
                 <DialogActions
                     sx={{
                         px: 3,
-                        pb: 3,
-                        pt: 2,
-                        gap: 2,
-                        borderTop: "1px solid #2a2a2a",
-                        bgcolor: "#121212",
+                        pb: 2.5,
+                        pt: 1.5,
+                        gap: 1.5,
+                        borderTop: `1px solid ${themeColors.border}`,
+                        bgcolor: themeColors.white,
                     }}
                 >
                     <Button
@@ -521,17 +536,19 @@ const CommonModal = ({
                         disabled={loading}
                         sx={{
                             borderRadius: "6px",
-                            px: 3,
-                            py: 0.75,
+                            px: 2.5,
+                            py: 0.5,
                             textTransform: "none",
                             fontWeight: 500,
-                            fontSize: "0.8rem",
-                            borderColor: "#3a3a3a",
-                            color: "#b0b0b0",
+                            fontSize: "0.75rem",
+                            borderColor: themeColors.border,
+                            color: themeColors.textLight,
+                            borderWidth: "2px", // Bolder border
                             "&:hover": {
-                                borderColor: "#5a5a5a",
-                                bgcolor: "#2a2a2a",
-                                color: "#e0e0e0",
+                                borderColor: themeColors.secondary,
+                                borderWidth: "2px",
+                                bgcolor: `${themeColors.secondary}10`,
+                                color: themeColors.secondary,
                             },
                         }}
                     >
@@ -544,19 +561,23 @@ const CommonModal = ({
                         disabled={loading}
                         sx={{
                             borderRadius: "6px",
-                            px: 4,
-                            py: 0.75,
+                            px: 3.5,
+                            py: 0.5,
                             textTransform: "none",
-                            fontWeight: 500,
-                            fontSize: "0.8rem",
-                            bgcolor: "#2a2a2a",
-                            color: "#e0e0e0",
+                            fontWeight: 600,
+                            fontSize: "0.75rem",
+                            bgcolor: themeColors.primary,
+                            color: themeColors.white,
+                            boxShadow: `0 3px 10px ${themeColors.primary}40`,
                             "&:hover": {
-                                bgcolor: "#3a3a3a",
+                                bgcolor: themeColors.primaryDark,
+                                boxShadow: `0 4px 14px ${themeColors.primary}60`,
+                                transform: 'translateY(-1px)',
                             },
                             "&.Mui-disabled": {
-                                bgcolor: "#1e1e1e",
-                                color: "#7a7a7a",
+                                background: themeColors.border,
+                                color: themeColors.textLight,
+                                boxShadow: 'none',
                             },
                         }}
                     >
