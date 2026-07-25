@@ -1,39 +1,43 @@
-
-
-import { HomeRepairServiceOutlined } from "@mui/icons-material";
+import {
+    Dashboard as DashboardIcon,
+    People as PeopleIcon,
+    Inventory as InventoryIcon,
+    Person as PersonIcon,
+    Settings as SettingsIcon,
+} from "@mui/icons-material";
 
 export const menuItems = [
     {
         title: "Dashboard",
         url: "/dashboard",
-        icon: HomeRepairServiceOutlined,
+        icon: DashboardIcon,
         // roles: ["admin", "staff"],
     },
 
-     {
+    {
         title: "Users",
         url: "/auth/users",
-        icon: HomeRepairServiceOutlined,
+        icon: PeopleIcon,
         // roles: ["admin", "staff"],
     },
     {
         title: "Products",
         url: "/products",
-        icon: HomeRepairServiceOutlined,
+        icon: InventoryIcon,
         // roles: ["admin", "staff"],
     },
 
     {
         title: "Customers",
         url: "/customers",
-        icon: HomeRepairServiceOutlined,
+        icon: PersonIcon,
         // roles: ["admin"],
     },
 
     {
         title: "Settings",
         url: "/settings",
-        icon: HomeRepairServiceOutlined,
+        icon: SettingsIcon,
         // roles: ["admin"],
     },
 ];
