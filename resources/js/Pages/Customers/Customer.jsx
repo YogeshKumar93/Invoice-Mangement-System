@@ -103,7 +103,7 @@ export default function Customer({ customers }) {
                         fontSize: "0.75rem"
                     }}
                 >
-                    Add Items
+                    Items
                 </Button>
             ),
         },
