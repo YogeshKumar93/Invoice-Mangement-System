@@ -55,7 +55,8 @@ export default function UsersPage() {
                         fontWeight: 500,
                         fontSize: "0.75rem",
                         bgcolor: row.status ? "success.light" : "error.light",
-                        color: row.status ? "success.dark" : "error.dark",
+                        // color: row.status ? "success.dark" : "error.dark",
+                         color: "white", 
                         borderRadius: "9999px",
                         px: 1,
                     }}

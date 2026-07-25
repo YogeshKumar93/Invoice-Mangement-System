@@ -74,11 +74,58 @@ export default function PaginateTable({
     // Check if any filter is active
     const hasActiveFilters = Object.values(filterValues).some(v => v !== "") || search !== "";
 
+    // Handle back button - automatically goes to previous page
+    const handleBack = () => {
+        window.history.back();
+    };
+
+    // Check if there is a previous page in history
+    // Browser always has previous page unless it's the first page
+    const canGoBack = window.history.length > 1;
+
     return (
         <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
             {/* COMPACT HEADER */}
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 p-3 border-b border-gray-100">
                 <div className="flex items-center gap-3 flex-1 flex-wrap">
+                    {/* Back Button - Automatically appears on all pages */}
+                    {canGoBack && (
+                        <button
+                            onClick={handleBack}
+                            className="
+                                px-3 py-1.5
+                                bg-[#F46725]
+                                hover:bg-[#A031D4]
+                                text-white
+                                text-xs
+                                font-medium
+                                rounded-lg
+                                transition-all
+                                duration-200
+                                shadow-sm
+                                whitespace-nowrap
+                                flex items-center gap-1
+                            "
+                            title="Go back"
+                        >
+                            <svg 
+                                xmlns="http://www.w3.org/2000/svg" 
+                                className="h-4 w-4" 
+                                fill="none" 
+                                viewBox="0 0 24 24" 
+                                stroke="currentColor" 
+                                strokeWidth={2}
+                            >
+                                <path 
+                                    strokeLinecap="round" 
+                                    strokeLinejoin="round" 
+                                    d="M10 19l-7-7m0 0l7-7m-7 7h18" 
+                                />
+                            </svg>
+                            Back
+                        </button>
+                    )}
+
                     {/* Title - Compact */}
                     <div className="flex items-center gap-2">
                         <h2 className="text-base font-semibold text-gray-800">
