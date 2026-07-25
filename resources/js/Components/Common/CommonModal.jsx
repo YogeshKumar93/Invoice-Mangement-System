@@ -18,7 +18,9 @@ import {
 } from "@mui/material";
 import { X, Save, AlertCircle, FileText } from "lucide-react";
 import Checkbox from "../Checkbox";
-import themeColors from "../../Utils/setThemeColors"; // Import your theme colors
+import themeColors from "../../Utils/setThemeColors";
+// Import your logo image
+import companyLogo from "../../Images/invoce logo.png";
 
 const CommonFormField = ({
     field,
@@ -51,10 +53,10 @@ const CommonFormField = ({
     const inputSx = {
         "& .MuiOutlinedInput-root": {
             bgcolor: themeColors.white,
-            borderRadius: "6px",
+            borderRadius: "3px",
             transition: "all 0.2s",
             "& fieldset": {
-                border: `2px solid ${themeColors.border}`, // Bolder border
+                border: `2px solid ${themeColors.border}`,
                 boxShadow: "none",
             },
             "&:hover fieldset": { 
@@ -335,8 +337,8 @@ const CommonModal = ({
                     pt: 2.5,
                     pb: 2,
                     px: 3,
-                    bgcolor: themeColors.white, // White header
-                    borderBottom: `2px solid ${themeColors.secondary}`, // Bolder secondary border
+                    bgcolor: themeColors.white,
+                    // borderBottom: `2px solid ${themeColors.secondary}`,
                     position: 'relative',
                 }}
             >
@@ -347,22 +349,32 @@ const CommonModal = ({
                         justifyContent: "space-between",
                     }}
                 >
-                    {/* Logo - Left */}
+                    {/* Logo - Left with Company Logo - Increased Width */}
                     <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, flex: 1 }}>
                         <Box
                             sx={{
-                                width: 36,
-                                height: 36,
-                                bgcolor: themeColors.secondary,
+                                width: 60, // Increased from 36 to 60
+                                height: 60, // Increased from 36 to 60
                                 borderRadius: "8px",
                                 display: "flex",
                                 alignItems: "center",
                                 justifyContent: "center",
-                                boxShadow: `0 3px 10px ${themeColors.secondary}40`,
                                 flexShrink: 0,
+                                overflow: "hidden",
+                                bgcolor: themeColors.white,
+                                border: `1px solid ${themeColors.border}`,
+                                p: 1, // Added padding
                             }}
                         >
-                            <FileText size={20} color={themeColors.white} />
+                            <img 
+                                src={companyLogo} 
+                                alt="Company Logo" 
+                                style={{
+                                    width: '100%',
+                                    height: '100%',
+                                    objectFit: 'contain',
+                                }}
+                            />
                         </Box>
                     </Box>
 
@@ -378,7 +390,7 @@ const CommonModal = ({
                         <Typography
                             variant="h6"
                             sx={{
-                                color: themeColors.secondary, // Secondary text color
+                                color: themeColors.secondary,
                                 fontWeight: 700,
                                 fontSize: "1rem",
                                 letterSpacing: "0px",
@@ -435,7 +447,7 @@ const CommonModal = ({
                 <Box sx={{ mt: 1.5 }}>
                     <Box
                         sx={{
-                            height: "3px", // Slightly thicker
+                            height: "3px",
                             bgcolor: `${themeColors.secondary}20`,
                             borderRadius: "2px",
                             overflow: "hidden",
@@ -543,7 +555,7 @@ const CommonModal = ({
                             fontSize: "0.75rem",
                             borderColor: themeColors.border,
                             color: themeColors.textLight,
-                            borderWidth: "2px", // Bolder border
+                            borderWidth: "2px",
                             "&:hover": {
                                 borderColor: themeColors.secondary,
                                 borderWidth: "2px",
