@@ -1,4 +1,6 @@
 import React, { useState, useMemo } from "react";
+import CommonFilters from "./CommonFilters";
+// import FilterDropdown from "./FilterDropdown"; // Import the filter component
 
 export default function PaginateTable({
     columns = [],
@@ -54,20 +56,93 @@ export default function PaginateTable({
         return filteredData.slice(start, start + pageSize);
     }, [filteredData, page]);
 
+    // Handle filter change
+    const handleFilterChange = (key, value) => {
+        setFilterValues({
+            ...filterValues,
+            [key]: value,
+        });
+        setPage(1);
+    };
+
+    // Clear all filters
+    const clearFilters = () => {
+        setFilterValues({});
+        setSearch("");
+        setPage(1);
+    };
+
+    // Check if any filter is active
+    const hasActiveFilters = Object.values(filterValues).some(v => v !== "") || search !== "";
+
     return (
         <div className="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
-            {/* HEADER */}
+            {/* HEADER - with Search, Filters, and Buttons in same row */}
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 p-6 border-b border-gray-100">
-                <div>
-                    <h2 className="text-xl font-semibold text-gray-800">
-                        {title}
-                    </h2>
-                    <p className="text-sm text-gray-500 mt-1">
-                        Total Records: {filteredData.length}
-                    </p>
+                <div className="flex items-center gap-4 flex-1 flex-wrap">
+                    <div>
+                        <h2 className="text-xl font-semibold text-gray-800">
+                            {title}
+                        </h2>
+                        <p className="text-sm text-gray-500">
+                            Total: {filteredData.length}
+                        </p>
+                    </div>
+
+                    {/* Search Input */}
+                    {searchable && (
+                        <input
+                            type="text"
+                            placeholder="Search..."
+                            value={search}
+                            onChange={(e) => {
+                                setSearch(e.target.value);
+                                setPage(1);
+                            }}
+                            className="
+                                w-full md:w-64
+                                px-4 py-2.5
+                                border border-gray-300
+                                rounded-lg
+                                text-sm
+                                focus:outline-none
+                                focus:ring-2
+                                focus:ring-blue-500
+                                focus:border-blue-500
+                            "
+                        />
+                    )}
+
+                    {/* Filter Dropdowns */}
+                    {filters.length > 0 && (
+                        <CommonFilters
+                            filters={filters}
+                            filterValues={filterValues}
+                            onFilterChange={handleFilterChange}
+                        />
+                    )}
+
+                    {/* Clear Filters Button */}
+                    {hasActiveFilters && (
+                        <button
+                            onClick={clearFilters}
+                            className="
+                                px-3 py-2
+                                text-sm
+                                text-gray-600
+                                hover:text-gray-900
+                                hover:bg-gray-100
+                                rounded-lg
+                                transition-colors
+                            "
+                        >
+                            ✕ Clear
+                        </button>
+                    )}
                 </div>
 
-                <div className="flex flex-wrap gap-2">
+                {/* Action Buttons */}
+                <div className="flex flex-wrap gap-2 flex-shrink-0">
                     {onExport && (
                         <button
                             onClick={() => onExport(filteredData)}
@@ -82,6 +157,7 @@ export default function PaginateTable({
                                 transition-all
                                 duration-200
                                 shadow-sm
+                                whitespace-nowrap
                             "
                         >
                             Export
@@ -102,73 +178,13 @@ export default function PaginateTable({
                                 transition-all
                                 duration-200
                                 shadow-sm
+                                whitespace-nowrap
                             "
                         >
                             {addButtonText}
                         </button>
                     )}
                 </div>
-            </div>
-
-            {/* SEARCH + FILTERS */}
-            <div className="p-6 border-b border-gray-100 flex flex-wrap gap-3">
-                {searchable && (
-                    <input
-                        type="text"
-                        placeholder="Search..."
-                        value={search}
-                        onChange={(e) => {
-                            setSearch(e.target.value);
-                            setPage(1);
-                        }}
-                        className="
-                            w-full md:w-72
-                            px-4 py-2.5
-                            border border-gray-300
-                            rounded-lg
-                            text-sm
-                            focus:outline-none
-                            focus:ring-2
-                            focus:ring-blue-500
-                            focus:border-blue-500
-                        "
-                    />
-                )}
-
-                {filters.map((filter) => (
-                    <select
-                        key={filter.key}
-                        className="
-                            px-4 py-2.5
-                            border border-gray-300
-                            rounded-lg
-                            text-sm
-                            focus:outline-none
-                            focus:ring-2
-                            focus:ring-blue-500
-                            focus:border-blue-500
-                        "
-                        onChange={(e) =>
-                            setFilterValues({
-                                ...filterValues,
-                                [filter.key]: e.target.value,
-                            })
-                        }
-                    >
-                        <option value="">
-                            {filter.label}
-                        </option>
-
-                        {filter.options.map((opt) => (
-                            <option
-                                key={opt.value}
-                                value={opt.value}
-                            >
-                                {opt.label}
-                            </option>
-                        ))}
-                    </select>
-                ))}
             </div>
 
             {/* TABLE */}
