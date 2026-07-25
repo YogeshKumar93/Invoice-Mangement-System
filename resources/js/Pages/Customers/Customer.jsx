@@ -32,6 +32,7 @@ import AddItemsModal from "./AddItemsModal";
 import { router } from "@inertiajs/react";
 
 const initialFormData = {
+    created_at: "",
     name: "",
     phone: "",
     address: "",
@@ -52,6 +53,19 @@ export default function Customer({ customers }) {
     const [customerToDelete, setCustomerToDelete] = useState(null);
 
     const columns = [
+        {
+    key: "created_at",        
+    label: "Created At",      
+    render: (row) =>    {
+         if (!row.created_at) return "N/A";
+            return new Date(row.created_at).toLocaleDateString("en-GB", {
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric'
+            });
+    }      
+        
+},
         { key: "name", label: "Name" },
         { key: "phone", label: "Phone" },
         { key: "aadhaar", label: "Aadhaar" },
@@ -81,7 +95,7 @@ export default function Customer({ customers }) {
                     size="small"
                     onClick={() => handleAddItems(row)}
                     startIcon={<AddIcon />}
-                    sx={{ 
+                    sx={{
                         textTransform: "none",
                         borderRadius: "6px",
                         px: 2,
@@ -103,7 +117,7 @@ export default function Customer({ customers }) {
                     size="small"
                     onClick={() => handleRecords(row)}
                     startIcon={<VisibilityIcon />}
-                    sx={{ 
+                    sx={{
                         textTransform: "none",
                         borderRadius: "6px",
                         px: 2,
@@ -304,7 +318,7 @@ export default function Customer({ customers }) {
                     },
                 }}
             >
-                <DialogTitle sx={{ 
+                <DialogTitle sx={{
                     pb: 1,
                     color: "error.main",
                     fontWeight: 600,

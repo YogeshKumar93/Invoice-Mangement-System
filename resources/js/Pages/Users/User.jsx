@@ -41,6 +41,18 @@ export default function UsersPage() {
     const [userToDelete, setUserToDelete] = useState(null);
 
     const columns = [
+          {
+        key: "created_at",        // ✅ created_at key
+        label: "Created At",      // ✅ Label
+        render: (row) => {        // ✅ Render function
+            if (!row.created_at) return "N/A";
+            return new Date(row.created_at).toLocaleDateString("en-GB", {
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric'
+            });
+        },
+    },
         { key: "name", label: "Name" },
         { key: "email", label: "Email" },
         { key: "phone", label: "Phone" },
