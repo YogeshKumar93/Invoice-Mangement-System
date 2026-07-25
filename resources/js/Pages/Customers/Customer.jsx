@@ -1,4 +1,30 @@
 import React, { useState } from "react";
+import {
+    Button,
+    IconButton,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Paper,
+    Chip,
+    Avatar,
+    Box,
+    Typography,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogContentText,
+    DialogActions,
+} from "@mui/material";
+import {
+    Edit as EditIcon,
+    Delete as DeleteIcon,
+    Add as AddIcon,
+    Visibility as VisibilityIcon,
+} from "@mui/icons-material";
 import PaginateTable from "@/Components/Common/PaginateTable";
 import CommonModal from "@/Components/Common/CommonModal";
 import { apiCall } from "@/Utils/apiCall";
@@ -17,13 +43,13 @@ export default function Customer({ customers }) {
     const [openModal, setOpenModal] = useState(false);
     const [editMode, setEditMode] = useState(false);
     const [editId, setEditId] = useState(null);
-
     const [formData, setFormData] = useState(initialFormData);
-
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false);
     const [itemModalOpen, setItemModalOpen] = useState(false);
     const [selectedCustomer, setSelectedCustomer] = useState(null);
+    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+    const [customerToDelete, setCustomerToDelete] = useState(null);
 
     const columns = [
         { key: "name", label: "Name" },
@@ -35,56 +61,86 @@ export default function Customer({ customers }) {
             label: "Image",
             render: (row) =>
                 row.image ? (
-                    <img
+                    <Avatar
                         src={`/storage/${row.image}`}
                         alt="customer"
-                        className="h-12 w-12 object-cover rounded"
+                        sx={{ width: 48, height: 48, borderRadius: 1 }}
+                        variant="rounded"
                     />
                 ) : (
-                    "No Image"
+                    <Chip label="No Image" size="small" variant="outlined" />
                 ),
         },
-
         {
             key: "add_items",
             label: "Add Items",
             render: (row) => (
-                <button
+                <Button
+                    variant="contained"
+                    color="success"
+                    size="small"
                     onClick={() => handleAddItems(row)}
-                    className="px-3 py-1 bg-green-600 text-white rounded"
+                    startIcon={<AddIcon />}
+                    sx={{ 
+                        textTransform: "none",
+                        borderRadius: "6px",
+                        px: 2,
+                        py: 0.5,
+                        fontSize: "0.75rem"
+                    }}
                 >
                     Add Items
-                </button>
+                </Button>
             ),
         },
-
         {
-    key: "records",
-    label: "Records",
-    render: (row) => (
-        <button
-            onClick={() => handleRecords(row)}
-            className="px-3 py-1 bg-blue-600 text-white rounded"
-        >
-            Records
-        </button>
-    ),
-},
-
-
+            key: "records",
+            label: "Records",
+            render: (row) => (
+                <Button
+                    variant="contained"
+                    color="primary"
+                    size="small"
+                    onClick={() => handleRecords(row)}
+                    startIcon={<VisibilityIcon />}
+                    sx={{ 
+                        textTransform: "none",
+                        borderRadius: "6px",
+                        px: 2,
+                        py: 0.5,
+                        fontSize: "0.75rem"
+                    }}
+                >
+                    Records
+                </Button>
+            ),
+        },
         {
             key: "action",
             label: "Action",
             render: (row) => (
-                <>
-                    <button onClick={() => handleEditClick(row)}>
-                        Edit
-                    </button>
-
-                    <button onClick={() => handleDelete(row)}>
-                        Delete
-                    </button>
-                </>
+                <Box sx={{ display: "flex", gap: 1 }}>
+                    <IconButton
+                        size="small"
+                        onClick={() => handleEditClick(row)}
+                        sx={{
+                            color: "primary.main",
+                            "&:hover": { bgcolor: "primary.light", color: "primary.dark" },
+                        }}
+                    >
+                        <EditIcon fontSize="small" />
+                    </IconButton>
+                    <IconButton
+                        size="small"
+                        onClick={() => handleDeleteClick(row)}
+                        sx={{
+                            color: "error.main",
+                            "&:hover": { bgcolor: "error.light", color: "error.dark" },
+                        }}
+                    >
+                        <DeleteIcon fontSize="small" />
+                    </IconButton>
+                </Box>
             ),
         },
     ];
@@ -101,18 +157,36 @@ export default function Customer({ customers }) {
     const handleEditClick = (row) => {
         setEditMode(true);
         setEditId(row.id);
-
         setFormData({
             name: row.name || "",
-
             phone: row.phone || "",
             aadhaar: row.aadhaar || "",
             address: row.address || "",
             image: row.image || null,
-
         });
-
         setOpenModal(true);
+    };
+
+    const handleDeleteClick = (row) => {
+        setCustomerToDelete(row);
+        setDeleteDialogOpen(true);
+    };
+
+    const handleDeleteConfirm = async () => {
+        if (!customerToDelete) return;
+
+        await apiCall({
+            url: `/customers/${customerToDelete.id}`,
+            method: "DELETE",
+            reload: true,
+        });
+        setDeleteDialogOpen(false);
+        setCustomerToDelete(null);
+    };
+
+    const handleDeleteCancel = () => {
+        setDeleteDialogOpen(false);
+        setCustomerToDelete(null);
     };
 
     const handleSave = async () => {
@@ -120,9 +194,7 @@ export default function Customer({ customers }) {
         setErrors({});
 
         try {
-
             const fd = new FormData();
-
             Object.keys(formData).forEach((key) => {
                 fd.append(key, formData[key]);
             });
@@ -146,9 +218,7 @@ export default function Customer({ customers }) {
         setErrors({});
 
         try {
-
             const fd = new FormData();
-
             Object.keys(formData).forEach((key) => {
                 fd.append(key, formData[key]);
             });
@@ -172,17 +242,7 @@ export default function Customer({ customers }) {
     };
 
     const handleRecords = (customer) => {
-    router.visit(`/customers/${customer.id}/records`);
-};
-
-    const handleDelete = async (row) => {
-        if (!confirm("Delete this customer?")) return;
-
-        await apiCall({
-            url: `/customers/${row.id}`,
-            method: "DELETE",
-            reload: true,
-        });
+        router.visit(`/customers/${customer.id}/records`);
     };
 
     const formFields = [
@@ -193,8 +253,6 @@ export default function Customer({ customers }) {
         { name: "image", label: "Image", type: "file" },
     ];
 
-
-    console.log(formData.image);
     return (
         <>
             <PaginateTable
@@ -203,12 +261,7 @@ export default function Customer({ customers }) {
                 columns={columns}
                 data={customers.data}
                 searchable={true}
-                searchKeys={[
-                    "name",
-                    "phone",
-                    "aadhaar",
-                    "address"
-                ]}
+                searchKeys={["name", "phone", "aadhaar", "address"]}
                 onAdd={() => {
                     setEditMode(false);
                     setEditId(null);
@@ -237,6 +290,75 @@ export default function Customer({ customers }) {
                 onClose={() => setItemModalOpen(false)}
                 customer={selectedCustomer}
             />
+
+            {/* Delete Confirmation Dialog */}
+            <Dialog
+                open={deleteDialogOpen}
+                onClose={handleDeleteCancel}
+                maxWidth="sm"
+                fullWidth
+                PaperProps={{
+                    sx: {
+                        borderRadius: "12px",
+                        p: 1,
+                    },
+                }}
+            >
+                <DialogTitle sx={{ 
+                    pb: 1,
+                    color: "error.main",
+                    fontWeight: 600,
+                    fontSize: "1.1rem"
+                }}>
+                    Delete Customer
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText sx={{ color: "text.secondary" }}>
+                        Are you sure you want to delete customer{" "}
+                        <Typography component="span" sx={{ fontWeight: 600, color: "text.primary" }}>
+                            {customerToDelete?.name}
+                        </Typography>
+                        ? This action cannot be undone.
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions sx={{ px: 2, pb: 2, gap: 1 }}>
+                    <Button
+                        onClick={handleDeleteCancel}
+                        variant="outlined"
+                        sx={{
+                            textTransform: "none",
+                            borderRadius: "6px",
+                            px: 3,
+                            py: 0.5,
+                            borderColor: "grey.400",
+                            color: "grey.600",
+                            "&:hover": {
+                                borderColor: "primary.main",
+                                color: "primary.main",
+                                bgcolor: "primary.light",
+                            },
+                        }}
+                    >
+                        Cancel
+                    </Button>
+                    <Button
+                        onClick={handleDeleteConfirm}
+                        variant="contained"
+                        color="error"
+                        sx={{
+                            textTransform: "none",
+                            borderRadius: "6px",
+                            px: 3,
+                            py: 0.5,
+                            "&:hover": {
+                                bgcolor: "error.dark",
+                            },
+                        }}
+                    >
+                        Delete
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </>
     );
 }
