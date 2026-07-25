@@ -1,5 +1,20 @@
 import React, { useState } from "react";
 import { router } from "@inertiajs/react";
+import {
+    Button,
+    IconButton,
+    Box,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogContentText,
+    DialogActions,
+    Typography,
+} from "@mui/material";
+import {
+    Edit as EditIcon,
+    Delete as DeleteIcon,
+} from "@mui/icons-material";
 import PaginateTable from "@/Components/Common/PaginateTable";
 import CommonModal from "@/Components/Common/CommonModal";
 import { apiCall } from "@/Utils/apiCall";
@@ -16,11 +31,11 @@ export default function Product({ products }) {
     const [openModal, setOpenModal] = useState(false);
     const [editMode, setEditMode] = useState(false);
     const [editId, setEditId] = useState(null);
-
     const [formData, setFormData] = useState(initialFormData);
-
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false);
+    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+    const [productToDelete, setProductToDelete] = useState(null);
 
     const columns = [
         { key: "name", label: "Name" },
@@ -31,15 +46,34 @@ export default function Product({ products }) {
             key: "action",
             label: "Action",
             render: (row) => (
-                <>
-                <button onClick={() => handleEditClick(row)}>
-                    Edit
-                </button>
-
-                <button onClick={() => handleDelete(row)}>
-                    Delete
-                </button>
-                </>
+                <Box sx={{ display: "flex", gap: 1 }}>
+                    <IconButton
+                        size="small"
+                        onClick={() => handleEditClick(row)}
+                        sx={{
+                            color: "primary.main",
+                            "&:hover": {
+                                bgcolor: "primary.light",
+                                color: "primary.dark",
+                            },
+                        }}
+                    >
+                        <EditIcon fontSize="small" />
+                    </IconButton>
+                    <IconButton
+                        size="small"
+                        onClick={() => handleDeleteClick(row)}
+                        sx={{
+                            color: "error.main",
+                            "&:hover": {
+                                bgcolor: "error.light",
+                                color: "error.dark",
+                            },
+                        }}
+                    >
+                        <DeleteIcon fontSize="small" />
+                    </IconButton>
+                </Box>
             ),
         },
     ];
@@ -64,6 +98,28 @@ export default function Product({ products }) {
         });
 
         setOpenModal(true);
+    };
+
+    const handleDeleteClick = (row) => {
+        setProductToDelete(row);
+        setDeleteDialogOpen(true);
+    };
+
+    const handleDeleteConfirm = async () => {
+        if (!productToDelete) return;
+
+        await apiCall({
+            url: `/products/${productToDelete.id}`,
+            method: "DELETE",
+            reload: true,
+        });
+        setDeleteDialogOpen(false);
+        setProductToDelete(null);
+    };
+
+    const handleDeleteCancel = () => {
+        setDeleteDialogOpen(false);
+        setProductToDelete(null);
     };
 
     const handleSave = async () => {
@@ -103,16 +159,6 @@ export default function Product({ products }) {
             setOpenModal(false);
         }
     };
-
-    const handleDelete = async (row) => {
-        if (!confirm("Delete this product?")) return;
-
-        await apiCall({
-            url: `/products/${row.id}`,
-            method: "DELETE",
-            reload: true,
-        });
-    }
 
     const formFields = [
         { name: "name", label: "Product Name", required: true },
@@ -157,6 +203,75 @@ export default function Product({ products }) {
                 errors={errors}
                 saveText={editMode ? "Update Product" : "Save Product"}
             />
+
+            {/* Delete Confirmation Dialog */}
+            <Dialog
+                open={deleteDialogOpen}
+                onClose={handleDeleteCancel}
+                maxWidth="sm"
+                fullWidth
+                PaperProps={{
+                    sx: {
+                        borderRadius: "12px",
+                        p: 1,
+                    },
+                }}
+            >
+                <DialogTitle sx={{
+                    pb: 1,
+                    color: "error.main",
+                    fontWeight: 600,
+                    fontSize: "1.1rem",
+                }}>
+                    Delete Product
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText sx={{ color: "text.secondary" }}>
+                        Are you sure you want to delete product{" "}
+                        <Typography component="span" sx={{ fontWeight: 600, color: "text.primary" }}>
+                            {productToDelete?.name}
+                        </Typography>
+                        ? This action cannot be undone.
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions sx={{ px: 2, pb: 2, gap: 1 }}>
+                    <Button
+                        onClick={handleDeleteCancel}
+                        variant="outlined"
+                        sx={{
+                            textTransform: "none",
+                            borderRadius: "6px",
+                            px: 3,
+                            py: 0.5,
+                            borderColor: "grey.400",
+                            color: "grey.600",
+                            "&:hover": {
+                                borderColor: "primary.main",
+                                color: "primary.main",
+                                bgcolor: "primary.light",
+                            },
+                        }}
+                    >
+                        Cancel
+                    </Button>
+                    <Button
+                        onClick={handleDeleteConfirm}
+                        variant="contained"
+                        color="error"
+                        sx={{
+                            textTransform: "none",
+                            borderRadius: "6px",
+                            px: 3,
+                            py: 0.5,
+                            "&:hover": {
+                                bgcolor: "error.dark",
+                            },
+                        }}
+                    >
+                        Delete
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </>
     );
 }
