@@ -1,6 +1,5 @@
 import React, { useState, useMemo } from "react";
 import CommonFilters from "./CommonFilters";
-// import FilterDropdown from "./FilterDropdown"; // Import the filter component
 
 export default function PaginateTable({
     columns = [],
@@ -76,20 +75,21 @@ export default function PaginateTable({
     const hasActiveFilters = Object.values(filterValues).some(v => v !== "") || search !== "";
 
     return (
-        <div className="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
-            {/* HEADER - with Search, Filters, and Buttons in same row */}
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 p-6 border-b border-gray-100">
-                <div className="flex items-center gap-4 flex-1 flex-wrap">
-                    <div>
-                        <h2 className="text-xl font-semibold text-gray-800">
+        <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+            {/* COMPACT HEADER */}
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 p-3 border-b border-gray-100">
+                <div className="flex items-center gap-3 flex-1 flex-wrap">
+                    {/* Title - Compact */}
+                    <div className="flex items-center gap-2">
+                        <h2 className="text-base font-semibold text-gray-800">
                             {title}
                         </h2>
-                        <p className="text-sm text-gray-500">
-                            Total: {filteredData.length}
-                        </p>
+                        <span className="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">
+                            {filteredData.length}
+                        </span>
                     </div>
 
-                    {/* Search Input */}
+                    {/* Search Input - Compact */}
                     {searchable && (
                         <input
                             type="text"
@@ -100,8 +100,8 @@ export default function PaginateTable({
                                 setPage(1);
                             }}
                             className="
-                                w-full md:w-64
-                                px-4 py-2.5
+                                w-48
+                                px-3 py-1.5
                                 border border-gray-300
                                 rounded-lg
                                 text-sm
@@ -113,7 +113,7 @@ export default function PaginateTable({
                         />
                     )}
 
-                    {/* Filter Dropdowns */}
+                    {/* Filter Dropdowns - Compact */}
                     {filters.length > 0 && (
                         <CommonFilters
                             filters={filters}
@@ -122,17 +122,17 @@ export default function PaginateTable({
                         />
                     )}
 
-                    {/* Clear Filters Button */}
+                    {/* Clear Filters Button - Compact */}
                     {hasActiveFilters && (
                         <button
                             onClick={clearFilters}
                             className="
-                                px-3 py-2
-                                text-sm
+                                px-2 py-1
+                                text-xs
                                 text-gray-600
                                 hover:text-gray-900
                                 hover:bg-gray-100
-                                rounded-lg
+                                rounded
                                 transition-colors
                             "
                         >
@@ -141,17 +141,17 @@ export default function PaginateTable({
                     )}
                 </div>
 
-                {/* Action Buttons */}
-                <div className="flex flex-wrap gap-2 flex-shrink-0">
+                {/* Action Buttons - Compact */}
+                <div className="flex flex-wrap gap-1.5 flex-shrink-0">
                     {onExport && (
                         <button
                             onClick={() => onExport(filteredData)}
                             className="
-                                px-4 py-2
+                                px-3 py-1.5
                                 bg-emerald-600
                                 hover:bg-emerald-700
                                 text-white
-                                text-sm
+                                text-xs
                                 font-medium
                                 rounded-lg
                                 transition-all
@@ -168,11 +168,11 @@ export default function PaginateTable({
                         <button
                             onClick={onAdd}
                             className="
-                                px-4 py-2
+                                px-3 py-1.5
                                 bg-blue-600
                                 hover:bg-blue-700
                                 text-white
-                                text-sm
+                                text-xs
                                 font-medium
                                 rounded-lg
                                 transition-all
@@ -187,7 +187,7 @@ export default function PaginateTable({
                 </div>
             </div>
 
-            {/* TABLE */}
+            {/* COMPACT TABLE */}
             <div className="overflow-x-auto">
                 <table className="min-w-full">
                     <thead className="bg-gray-50 sticky top-0 z-10">
@@ -196,7 +196,7 @@ export default function PaginateTable({
                                 <th
                                     key={col.key}
                                     className="
-                                        px-6 py-4
+                                        px-4 py-2.5
                                         text-left
                                         text-xs
                                         font-semibold
@@ -227,7 +227,7 @@ export default function PaginateTable({
                                         <td
                                             key={col.key}
                                             className="
-                                                px-6 py-4
+                                                px-4 py-2.5
                                                 text-sm
                                                 text-gray-700
                                             "
@@ -244,16 +244,16 @@ export default function PaginateTable({
                                 <td
                                     colSpan={columns.length}
                                     className="
-                                        py-16
+                                        py-10
                                         text-center
                                         text-gray-500
                                     "
                                 >
-                                    <div className="flex flex-col items-center gap-2">
-                                        <span className="text-4xl">
+                                    <div className="flex flex-col items-center gap-1">
+                                        <span className="text-3xl">
                                             📄
                                         </span>
-                                        <p className="font-medium">
+                                        <p className="text-sm font-medium">
                                             No records found
                                         </p>
                                     </div>
@@ -264,10 +264,10 @@ export default function PaginateTable({
                 </table>
             </div>
 
-            {/* PAGINATION */}
+            {/* COMPACT PAGINATION */}
             {pagination && (
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 p-6 border-t border-gray-100">
-                    <p className="text-sm text-gray-600">
+                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 p-3 border-t border-gray-100">
+                    <p className="text-xs text-gray-600">
                         Showing{" "}
                         <span className="font-medium">
                             {paginatedData.length}
@@ -279,15 +279,15 @@ export default function PaginateTable({
                         records
                     </p>
 
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2">
                         <button
                             disabled={page === 1}
                             onClick={() => setPage(page - 1)}
                             className="
-                                px-4 py-2
+                                px-3 py-1
                                 border border-gray-300
                                 rounded-lg
-                                text-sm
+                                text-xs
                                 font-medium
                                 hover:bg-gray-50
                                 disabled:opacity-50
@@ -297,7 +297,7 @@ export default function PaginateTable({
                             Prev
                         </button>
 
-                        <span className="text-sm font-medium text-gray-700">
+                        <span className="text-xs font-medium text-gray-700">
                             Page {page} of {totalPages || 1}
                         </span>
 
@@ -308,10 +308,10 @@ export default function PaginateTable({
                             }
                             onClick={() => setPage(page + 1)}
                             className="
-                                px-4 py-2
+                                px-3 py-1
                                 border border-gray-300
                                 rounded-lg
-                                text-sm
+                                text-xs
                                 font-medium
                                 hover:bg-gray-50
                                 disabled:opacity-50
