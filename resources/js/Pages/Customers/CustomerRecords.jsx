@@ -12,6 +12,9 @@ import {
 import {
     Person as PersonIcon,
     Phone as PhoneIcon,
+    Receipt as ReceiptIcon,
+    Payment as PaymentIcon,
+    MoneyOff as MoneyOffIcon,
 } from "@mui/icons-material";
 import PaginateTable from "@/Components/Common/PaginateTable";
 import { usePage } from "@inertiajs/react";
@@ -74,62 +77,86 @@ export default function CustomerRecords() {
     console.log("props props prp", props);
 
     return (
-        <Box sx={{ p: 2 }}>
+        <Box sx={{ p: 0, mt:-2 }}>
 
             {/* Customer Info Card */}
             <Card
                 sx={{
                     borderRadius: "12px",
                     boxShadow: 1,
-                    mb: 2,
+                    mb: 1,
                     p: 0,
                     overflow: "hidden",
                 }}
             >
-                <CardContent sx={{ p: 2 }}>
-                    {/* <Typography variant="h5" sx={{ fontWeight: 700, mb: 2 }}>
-                        Customer Records
-                    </Typography> */}
+             <CardContent sx={{ p: 2 }}>
+    <Grid container spacing={2}>
+        {/* Name & Phone - Stacked vertically */}
+        <Grid item xs={12} sm={6}>
+            <Box sx={{ display: "flex", alignItems: "flex-start", gap: 1 }}>
+                <PersonIcon sx={{ color: "primary.main", fontSize: 20, mt: 0.5 }} />
+                <Box>
+                    <Typography variant="body2" noWrap>
+                        <strong>Name:</strong> {customer?.name}
+                    </Typography>
+                    <Typography variant="body2" noWrap sx={{ mt: 0.5 }}>
+                        {customer?.phone}
+                    </Typography>
+                </Box>
+            </Box>
+        </Grid>
 
-                    <Grid container spacing={2}>
-                        <Grid item xs={12} sm={6}>
-                            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                                <PersonIcon sx={{ color: "primary.main", fontSize: 20 }} />
-                                <Typography variant="body2">
-                                    <strong>Name:</strong> {customer?.name}
-                                </Typography>
-                            </Box>
-                        </Grid>
+        {/* Financial Metrics - in a single row */}
+      <Grid item xs={12} sm={6}>
+    <Box
+        sx={{
+            display: "grid",
+            gridTemplateColumns: { xs: "1fr 1fr 1fr", sm: "1fr 1fr 1fr" },
+            gap: 1,
+        }}
+    >
+        {/* Total Transaction */}
+        <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+            <ReceiptIcon sx={{ color: "primary.main", fontSize: { xs: 16, sm: 20 }, flexShrink: 0 }} />
+            <Box>
+                <Typography variant="body2" display="block" color="text.secondary" sx={{ fontWeight: 700, fontSize: { xs: "0.5rem", sm: "0.65rem" }, lineHeight: 1.2 }}>
+                    Total Transaction
+                </Typography>
+                <Typography variant="body3" sx={{ fontWeight: 700, color: "primary.main", fontSize: { xs: "0.7rem", sm: "0.875rem" } }}>
+                    ₹{customer?.total_transaction || 0}
+                </Typography>
+            </Box>
+        </Box>
 
-                        <Grid item xs={12} sm={6}>
-                            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                                <PhoneIcon sx={{ color: "primary.main", fontSize: 20 }} />
-                                <Typography variant="body2">
-                                    <strong>Phone:</strong> {customer?.phone}
-                                </Typography>
-                            </Box>
-                        </Grid>
+        {/* Total Payment */}
+        <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+            <PaymentIcon sx={{ color: "success.main", fontSize: { xs: 16, sm: 20 }, flexShrink: 0 }} />
+            <Box>
+                <Typography variant="caption" display="block" color="text.secondary" sx={{ fontWeight: 700, fontSize: { xs: "0.5rem", sm: "0.65rem" }, lineHeight: 1.2 }}>
+                    Total Paid
+                </Typography>
+                <Typography variant="body3" sx={{ fontWeight: 700, color: "success.main", fontSize: { xs: "0.7rem", sm: "0.875rem" } }}>
+                    ₹{customer?.total_payment || 0}
+                </Typography>
+            </Box>
+        </Box>
 
-                        {/* Commented fields - Uncomment if needed */}
-                        {/* <Grid item xs={12} sm={6}>
-                            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                                <BadgeIcon sx={{ color: "primary.main", fontSize: 20 }} />
-                                <Typography variant="body2">
-                                    <strong>Aadhaar:</strong> {customer?.aadhaar}
-                                </Typography>
-                            </Box>
-                        </Grid>
-
-                        <Grid item xs={12} sm={6}>
-                            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                                <HomeIcon sx={{ color: "primary.main", fontSize: 20 }} />
-                                <Typography variant="body2">
-                                    <strong>Address:</strong> {customer?.address}
-                                </Typography>
-                            </Box>
-                        </Grid> */}
-                    </Grid>
-                </CardContent>
+        {/* Total Dues */}
+        <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+            <MoneyOffIcon sx={{ color: "error.main", fontSize: { xs: 16, sm: 20 }, flexShrink: 0 }} />
+            <Box>
+                <Typography variant="caption" display="block" color="text.secondary" sx={{ fontWeight: 700, fontSize: { xs: "0.5rem", sm: "0.65rem" }, lineHeight: 1.2 }}>
+                    Current Dues
+                </Typography>
+                <Typography variant="body3" sx={{ fontWeight: 700, color: "error.main", fontSize: { xs: "0.7rem", sm: "0.875rem" } }}>
+                    ₹{customer?.total_dues || 0}
+                </Typography>
+            </Box>
+        </Box>
+    </Box>
+</Grid>
+    </Grid>
+</CardContent>
             </Card>
 
             {/* Records Table */}
