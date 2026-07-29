@@ -12,7 +12,20 @@ class CustomerController extends Controller
 {
     public function index()
     {
-        $customers = Customer::latest()->paginate(20);
+        $customers = Customer::select(
+    'id',
+    'name',
+    'phone',
+    'address',
+    'aadhaar',
+    'image',
+    'guarantor_name',
+    'guarantor_phone',
+    'guarantor_address',
+    'guarantor_relation'
+)
+->latest()
+->paginate(20);
 
         return Inertia::render('Customers/Customer', [
             'customers' => $customers
