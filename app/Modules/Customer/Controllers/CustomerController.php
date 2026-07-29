@@ -12,8 +12,7 @@ class CustomerController extends Controller
 {
     public function index()
     {
-        $customers = Customer::latest()
-            ->paginate(20);
+        $customers = Customer::latest()->paginate(20);
 
         return Inertia::render('Customers/Customer', [
             'customers' => $customers
@@ -28,7 +27,12 @@ class CustomerController extends Controller
 
             'address'=> 'nullable|string',
             'aadhaar' => 'nullable|string|max:20',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
+            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+
+            'guarantor_name' => 'nullable|string|max:255',
+'guarantor_phone' => 'nullable|digits_between:10,15',
+'guarantor_address' => 'nullable|string|max:500',
+'guarantor_relation' => 'nullable|string|max:100',
         ]);
 
          if ($request->hasFile('image')) {
@@ -52,7 +56,12 @@ class CustomerController extends Controller
             
             'address'=> 'nullable|string',
             'aadhaar' => 'nullable|string|max:20',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
+            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+
+            'guarantor_name' => 'nullable|string|max:255',
+'guarantor_phone' => 'nullable|digits_between:10,15',
+'guarantor_address' => 'nullable|string|max:500',
+'guarantor_relation' => 'nullable|string|max:100',
         ]);
 
         $customer->update($validated);

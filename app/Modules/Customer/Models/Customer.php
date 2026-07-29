@@ -8,10 +8,15 @@ class Customer extends Model
 {
     protected $fillable = [
          'name',
-    'phone',
-    'address',
-    'aadhaar',
-    'image',
+         'phone',
+         'address',
+         'aadhaar',
+         'image',
+
+         'gurantor_name',
+         'gurantor_phone',
+         'gurantor_address',
+         'gurantor_relation',
     ];
 
 
