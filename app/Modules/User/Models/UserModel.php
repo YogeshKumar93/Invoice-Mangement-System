@@ -4,6 +4,7 @@ namespace App\Modules\User\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Str;
 
 class UserModel extends Authenticatable
 {
@@ -11,22 +12,48 @@ class UserModel extends Authenticatable
 
     protected $table = 'users';
 
-   protected $fillable = [
-    'name',
-    'email',
-   
-    'phone',
-    'password',
-    // 'role',
-    // 'status',
-];
+    protected $fillable = [
+        'user_id',
+        'name',
+        'email',
+        'phone',
+        'password',
+        'role',
+        'status',
+    ];
 
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    //  protected $casts = [
-    //     'status' => 'boolean',
-    // ];
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
+        'status' => 'boolean',
+    ];
+
+    /**
+     * Auto-generate user_id: MYMS1, MYMS2, MYMS3...
+     */
+    protected static function boot()
+    {
+        parent::boot();
+        
+        static::creating(function ($user) {
+            if (empty($user->user_id)) {
+                $lastUser = static::withTrashed()->orderBy('id', 'desc')->first();
+                $nextNumber = $lastUser ? ($lastUser->id + 1) : 1;
+                $user->user_id = 'MYMS' . $nextNumber;
+            }
+        });
+    }
+
+    /**
+     * Route binding by user_id
+     */
+    public function getRouteKeyName()
+    {
+        return 'user_id';
+    }
 }

@@ -12,11 +12,11 @@ class AuthValidation
     public static function signIn(array $data)
     {
         return Validator::make($data, [
-            'username' => 'required|string|min:5',
+            'user_id' => 'required|string|min:3',
             'password' => 'required|string|min:4',
         ], [
-            'username.required' => 'Username is required',
-            'username.min' => 'Username must be at least 5 characters',
+            'user_id.required' => 'User ID is required',
+            'user_id.min' => 'User ID must be at least 3 characters',
             'password.required' => 'Password is required',
             'password.min' => 'Password must be at least 4 characters',
         ]);
@@ -28,10 +28,9 @@ class AuthValidation
     public static function secureLogin(array $data)
     {
         $rules = [
-            'username' => 'required|string',
+            'user_id' => 'required|string',
         ];
         
-        // Add conditional validation based on 2FA type
         if (isset($data['otp']) && !empty($data['otp'])) {
             $rules['otp'] = 'required|digits:6';
             $rules['otp_ref'] = 'required|string';
@@ -40,6 +39,7 @@ class AuthValidation
         }
         
         return Validator::make($data, $rules, [
+            'user_id.required' => 'User ID is required',
             'otp.digits' => 'OTP must be 6 digits',
             'mpin.digits' => 'MPIN must be 6 digits',
         ]);
@@ -51,7 +51,7 @@ class AuthValidation
     public static function resendOtp(array $data)
     {
         return Validator::make($data, [
-            'username' => 'required|string',
+            'user_id' => 'required|string',
         ]);
     }
 
@@ -61,7 +61,9 @@ class AuthValidation
     public static function forgetPassword(array $data)
     {
         return Validator::make($data, [
-            'username' => 'required|string|min:5',
+            'user_id' => 'required|string|min:3',
+        ], [
+            'user_id.required' => 'User ID is required',
         ]);
     }
 
@@ -71,7 +73,9 @@ class AuthValidation
     public static function resetMpin(array $data)
     {
         return Validator::make($data, [
-            'username' => 'required|string|min:5',
+            'user_id' => 'required|string|min:3',
+        ], [
+            'user_id.required' => 'User ID is required',
         ]);
     }
 
