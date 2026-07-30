@@ -18,6 +18,10 @@ import {
     DialogContent,
     DialogContentText,
     DialogActions,
+    FormControlLabel,
+    Checkbox,
+    Grid,
+    TextField,
 } from "@mui/material";
 import {
     Edit as EditIcon,
@@ -38,6 +42,10 @@ const initialFormData = {
     address: "",
     aadhaar: "",
     image: null,
+    guarantor_name: "",
+    guarantor_phone: "",
+    guarantor_address: "",
+    guarantor_relation: "",
 };
 
 export default function Customer({ customers }) {
@@ -51,6 +59,7 @@ export default function Customer({ customers }) {
     const [selectedCustomer, setSelectedCustomer] = useState(null);
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [customerToDelete, setCustomerToDelete] = useState(null);
+    const [showGuarantorFields, setShowGuarantorFields] = useState(false);
 
     const columns = [
         {
@@ -177,7 +186,15 @@ export default function Customer({ customers }) {
             aadhaar: row.aadhaar || "",
             address: row.address || "",
             image: row.image || null,
+            guarantor_name: row.guarantor_name || "",
+            guarantor_phone: row.guarantor_phone || "",
+            guarantor_address: row.guarantor_address || "",
+            guarantor_relation: row.guarantor_relation || "",
         });
+        // Show guarantor fields if any guarantor data exists
+        setShowGuarantorFields(
+            !!(row.guarantor_name || row.guarantor_phone || row.guarantor_address || row.guarantor_relation)
+        );
         setOpenModal(true);
     };
 
@@ -210,7 +227,9 @@ export default function Customer({ customers }) {
         try {
             const fd = new FormData();
             Object.keys(formData).forEach((key) => {
-                fd.append(key, formData[key]);
+                if (formData[key] !== null && formData[key] !== "") {
+                    fd.append(key, formData[key]);
+                }
             });
 
             await apiCall({
@@ -234,7 +253,9 @@ export default function Customer({ customers }) {
         try {
             const fd = new FormData();
             Object.keys(formData).forEach((key) => {
-                fd.append(key, formData[key]);
+                if (formData[key] !== null && formData[key] !== "") {
+                    fd.append(key, formData[key]);
+                }
             });
             await apiCall({
                 url: `/customers/${editId}`,
@@ -259,13 +280,103 @@ export default function Customer({ customers }) {
         router.visit(`/customers/${customer.id}/records`);
     };
 
-    const formFields = [
+    // Basic form fields (without guarantor)
+    const baseFormFields = [
         { name: "name", label: "Customer Name" },
         { name: "phone", label: "Phone" },
         { name: "aadhaar", label: "Aadhaar Number" },
         { name: "address", label: "Address" },
         { name: "image", label: "Image", type: "file" },
     ];
+
+    // If your CommonModal supports customContent prop, use this approach
+    // If not, you'll need to modify the CommonModal component or create a custom modal
+    const customModalContent = (
+        <Box sx={{ mt: 2 }}>
+            <FormControlLabel
+                control={
+                    <Checkbox
+                        checked={showGuarantorFields}
+                        onChange={(e) => {
+                            setShowGuarantorFields(e.target.checked);
+                            if (!e.target.checked) {
+                                setFormData(prev => ({
+                                    ...prev,
+                                    guarantor_name: "",
+                                    guarantor_phone: "",
+                                    guarantor_address: "",
+                                    guarantor_relation: "",
+                                }));
+                            }
+                        }}
+                        color="primary"
+                    />
+                }
+                label="Guarantor if any"
+                sx={{ mb: 1 }}
+            />
+
+            {showGuarantorFields && (
+                <Box sx={{ mt: 2, p: 2, border: '1px solid', borderColor: 'divider', borderRadius: 1 }}>
+                    <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 600 }}>
+                        Guarantor Details
+                    </Typography>
+                    <Grid container spacing={2}>
+                        <Grid item xs={12} md={6}>
+                            <TextField
+                                fullWidth
+                                label="Guarantor Name"
+                                name="guarantor_name"
+                                value={formData.guarantor_name}
+                                onChange={handleChange}
+                                error={!!errors.guarantor_name}
+                                helperText={errors.guarantor_name}
+                                size="small"
+                            />
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <TextField
+                                fullWidth
+                                label="Guarantor Phone"
+                                name="guarantor_phone"
+                                value={formData.guarantor_phone}
+                                onChange={handleChange}
+                                error={!!errors.guarantor_phone}
+                                helperText={errors.guarantor_phone}
+                                size="small"
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                fullWidth
+                                label="Guarantor Address"
+                                name="guarantor_address"
+                                value={formData.guarantor_address}
+                                onChange={handleChange}
+                                error={!!errors.guarantor_address}
+                                helperText={errors.guarantor_address}
+                                size="small"
+                                multiline
+                                rows={2}
+                            />
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <TextField
+                                fullWidth
+                                label="Guarantor Relation"
+                                name="guarantor_relation"
+                                value={formData.guarantor_relation}
+                                onChange={handleChange}
+                                error={!!errors.guarantor_relation}
+                                helperText={errors.guarantor_relation}
+                                size="small"
+                            />
+                        </Grid>
+                    </Grid>
+                </Box>
+            )}
+        </Box>
+    );
 
     return (
         <>
@@ -281,6 +392,7 @@ export default function Customer({ customers }) {
                     setEditId(null);
                     setFormData(initialFormData);
                     setErrors({});
+                    setShowGuarantorFields(false);
                     setOpenModal(true);
                 }}
                 addButtonText="Add Customer"
@@ -288,15 +400,19 @@ export default function Customer({ customers }) {
 
             <CommonModal
                 open={openModal}
-                onClose={() => setOpenModal(false)}
+                onClose={() => {
+                    setOpenModal(false);
+                    setShowGuarantorFields(false);
+                }}
                 title={editMode ? "Edit Customer" : "Add Customer"}
-                fieldConfig={formFields}
+                fieldConfig={baseFormFields}
                 formData={formData}
                 setFormData={setFormData}
                 handleChange={handleChange}
                 onSave={editMode ? handleEdit : handleSave}
                 errors={errors}
                 saveText={editMode ? "Update Customer" : "Save Customer"}
+                customContent={customModalContent}
             />
 
             <AddItemsModal
