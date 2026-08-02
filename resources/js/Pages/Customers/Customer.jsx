@@ -398,22 +398,22 @@ export default function Customer({ customers }) {
                 addButtonText="Add Customer"
             />
 
-            <CommonModal
-                open={openModal}
-                onClose={() => {
-                    setOpenModal(false);
-                    setShowGuarantorFields(false);
-                }}
-                title={editMode ? "Edit Customer" : "Add Customer"}
-                fieldConfig={baseFormFields}
-                formData={formData}
-                setFormData={setFormData}
-                handleChange={handleChange}
-                onSave={editMode ? handleEdit : handleSave}
-                errors={errors}
-                saveText={editMode ? "Update Customer" : "Save Customer"}
-                customContent={customModalContent}
-            />
+           <CommonModal
+    open={openModal}
+    onClose={() => {
+        setOpenModal(false);
+        setShowGuarantorFields(false);
+    }}
+    title={editMode ? "Edit Customer" : "Add Customer"}
+    fieldConfig={baseFormFields}
+    formData={formData}
+    handleChange={handleChange}
+    onSave={editMode ? handleEdit : handleSave}
+    errors={errors}
+    saveText={editMode ? "Update Customer" : "Save Customer"}
+>
+    {customModalContent}
+</CommonModal>
 
             <AddItemsModal
                 open={itemModalOpen}

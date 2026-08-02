@@ -59,7 +59,7 @@ const CommonFormField = ({
                 border: `2px solid ${themeColors.border}`,
                 boxShadow: "none",
             },
-            "&:hover fieldset": { 
+            "&:hover fieldset": {
                 borderColor: themeColors.secondary,
                 borderWidth: "2px",
             },
@@ -125,8 +125,8 @@ const CommonFormField = ({
         InputProps: {
             startAdornment: StartIcon ? (
                 <InputAdornment position="start" sx={{ ml: 0.5 }}>
-                    <StartIcon 
-                        size={16} 
+                    <StartIcon
+                        size={16}
                         color={formData[name] ? themeColors.secondary : themeColors.textLight}
                     />
                 </InputAdornment>
@@ -167,8 +167,8 @@ const CommonFormField = ({
                                 ...params.InputProps,
                                 startAdornment: StartIcon ? (
                                     <InputAdornment position="start" sx={{ ml: 0.5 }}>
-                                        <StartIcon 
-                                            size={16} 
+                                        <StartIcon
+                                            size={16}
                                             color={formData[name] ? themeColors.secondary : themeColors.textLight}
                                         />
                                     </InputAdornment>
@@ -218,8 +218,8 @@ const CommonFormField = ({
                     InputProps={{
                         startAdornment: StartIcon ? (
                             <InputAdornment position="start" sx={{ ml: 0.5 }}>
-                                <StartIcon 
-                                    size={16} 
+                                <StartIcon
+                                    size={16}
                                     color={formData[name] ? themeColors.secondary : themeColors.textLight}
                                 />
                             </InputAdornment>
@@ -366,9 +366,9 @@ const CommonModal = ({
                                 p: 1, // Added padding
                             }}
                         >
-                            <img 
-                                src={companyLogo} 
-                                alt="Company Logo" 
+                            <img
+                                src={companyLogo}
+                                alt="Company Logo"
                                 style={{
                                     width: '100%',
                                     height: '100%',
@@ -379,9 +379,9 @@ const CommonModal = ({
                     </Box>
 
                     {/* Title - Center with Secondary Color */}
-                    <Box sx={{ 
-                        display: "flex", 
-                        alignItems: "center", 
+                    <Box sx={{
+                        display: "flex",
+                        alignItems: "center",
                         gap: 1.5,
                         position: 'absolute',
                         left: '50%',
@@ -466,46 +466,44 @@ const CommonModal = ({
             </Box>
 
             <DialogContent sx={{ px: 3, py: 2, overflowY: "auto" }}>
-                {children ? (
-                    children
-                ) : (
-                    <Box
-                        sx={{
-                            display: "grid",
-                            gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
-                            columnGap: 2,
-                            rowGap: 1.5,
-                        }}
-                    >
-                        {fieldConfig.map((field, index) => (
-                            <Box
-                                key={index}
-                                sx={{
-                                    gridColumn: field.fullWidth
-                                        ? "1 / -1"
-                                        : "auto",
-                                }}
-                            >
-                                <CommonFormField
-                                    field={field}
-                                    formData={formData}
-                                    handleChange={handleChange}
-                                    setValue={(name, value) =>
-                                        handleChange({
-                                            target: {
-                                                name,
-                                                value,
-                                            },
-                                        })
-                                    }
-                                    errors={errors}
-                                    loading={loading}
-                                />
-                            </Box>
-                        ))}
-                    </Box>
-                )}
-                
+
+                <Box
+                    sx={{
+                        display: "grid",
+                        gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
+                        columnGap: 2,
+                        rowGap: 1.5,
+                    }}
+                >
+                    {fieldConfig.map((field, index) => (
+                        <Box
+                            key={index}
+                            sx={{
+                                gridColumn: field.fullWidth ? "1 / -1" : "auto",
+                            }}
+                        >
+                            <CommonFormField
+                                field={field}
+                                formData={formData}
+                                handleChange={handleChange}
+                                setValue={(name, value) =>
+                                    handleChange({
+                                        target: {
+                                            name,
+                                            value,
+                                        },
+                                    })
+                                }
+                                errors={errors}
+                                loading={loading}
+                            />
+                        </Box>
+                    ))}
+                </Box>
+
+                {/* Extra custom content */}
+                {children}
+
                 {/* Error Summary */}
                 {Object.keys(errors).length > 0 && (
                     <Box
@@ -529,6 +527,7 @@ const CommonModal = ({
                         </Typography>
                     </Box>
                 )}
+
             </DialogContent>
 
             {!hideActions && (
