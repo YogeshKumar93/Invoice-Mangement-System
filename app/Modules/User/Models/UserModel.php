@@ -42,7 +42,7 @@ class UserModel extends Authenticatable
         
         static::creating(function ($user) {
             if (empty($user->user_id)) {
-                $lastUser = static::withTrashed()->orderBy('id', 'desc')->first();
+                $lastUser = static::orderBy('id', 'desc')->first();
                 $nextNumber = $lastUser ? ($lastUser->id + 1) : 1;
                 $user->user_id = 'MYMS' . $nextNumber;
             }

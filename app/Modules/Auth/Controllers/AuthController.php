@@ -57,14 +57,14 @@ class AuthController extends Controller
         }
 
         // Store user in session (for Inertia SSR)
-        Session::put('user', [
-            'id' => $user->id,
-            'user_id' => $user->user_id,
-            'name' => $user->name,
-            'email' => $user->email,
-            'role' => $user->role ?? 'user',
-        ]);
-        Session::put('is_logged_in', true);
+        session(['user' => [
+    'id' => $user->id,
+    'user_id' => $user->user_id,
+    'name' => $user->name,
+    'email' => $user->email,
+    'role' => $user->role,
+]]);
+session(['is_logged_in' => true]);
 
         // Login the user
         Auth::login($user, $request->remember ?? false);
